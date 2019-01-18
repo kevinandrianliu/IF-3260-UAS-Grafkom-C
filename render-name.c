@@ -9,6 +9,59 @@
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
 
+void render_nama( int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    render_a(336, y, fbp, vinfo, finfo);
+    render_a(368, y, fbp, vinfo, finfo);
+    render_a(400, y, fbp, vinfo, finfo);
+    render_a(432, y, fbp, vinfo, finfo);
+}
+    
+void render_yora(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    render_kotak(80, y, fbp, vinfo, finfo);
+    render_d(106, y, fbp, vinfo, finfo);
+    render_i(126, y, fbp, vinfo, finfo);
+    render_n(136, y, fbp, vinfo, finfo);
+    render_d(156, y, fbp, vinfo, finfo);
+    render_a(176, y, fbp, vinfo, finfo);
+    render_y(204, y, fbp, vinfo, finfo);
+    render_o(220, y, fbp, vinfo, finfo);
+    render_r(240, y, fbp, vinfo, finfo);
+    render_a(260, y, fbp, vinfo, finfo);
+    render_i(288, y, fbp, vinfo, finfo);
+    render_s(296, y, fbp, vinfo, finfo);
+    render_l(316, y, fbp, vinfo, finfo);
+    render_a(332, y, fbp, vinfo, finfo);
+    render_m(352, y, fbp, vinfo, finfo);
+    render_i(376, y, fbp, vinfo, finfo);
+    render_strip(400, y, fbp, vinfo, finfo);
+    render_p(604, y, fbp, vinfo, finfo);
+    render_a(624, y, fbp, vinfo, finfo);
+    render_d(644, y, fbp, vinfo, finfo);
+    render_a(664, y, fbp, vinfo, finfo);
+    render_n(684, y, fbp, vinfo, finfo);
+    render_g(704, y, fbp, vinfo, finfo);
+}
+
+void render_tere(int y,char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    render_kotak(80, y, fbp, vinfo, finfo);
+    render_t(106, y, fbp, vinfo, finfo);
+    render_e(126, y, fbp, vinfo, finfo);
+    render_r(146, y, fbp, vinfo, finfo);
+    render_e(166, y, fbp, vinfo, finfo);
+    render_s(186, y, fbp, vinfo, finfo);
+    render_a(206, y, fbp, vinfo, finfo);
+    render_strip(520, y, fbp, vinfo, finfo);
+    render_p(544, y, fbp, vinfo, finfo);
+    render_e(564, y, fbp, vinfo, finfo);
+    render_k(584, y, fbp, vinfo, finfo);
+    render_a(604, y, fbp, vinfo, finfo);
+    render_n(624, y, fbp, vinfo, finfo);
+    render_b(644, y, fbp, vinfo, finfo);
+    render_a(664, y, fbp, vinfo, finfo);
+    render_r(684, y, fbp, vinfo, finfo);
+    render_u(704, y, fbp, vinfo, finfo);
+}
+
 void bella(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) {
 
     render_kotak(80, y, fbp, vinfo, finfo);    
