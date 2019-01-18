@@ -9,14 +9,14 @@
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
 
-void render_nama( int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+void nama( int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
     render_a(336, y, fbp, vinfo, finfo);
     render_a(368, y, fbp, vinfo, finfo);
     render_a(400, y, fbp, vinfo, finfo);
     render_a(432, y, fbp, vinfo, finfo);
 }
     
-void render_yora(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+void yora(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
     render_kotak(80, y, fbp, vinfo, finfo);
     render_d(106, y, fbp, vinfo, finfo);
     render_i(126, y, fbp, vinfo, finfo);
@@ -42,7 +42,7 @@ void render_yora(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix
     render_g(704, y, fbp, vinfo, finfo);
 }
 
-void render_tere(int y,char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+void tere(int y,char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
     render_kotak(80, y, fbp, vinfo, finfo);
     render_t(106, y, fbp, vinfo, finfo);
     render_e(126, y, fbp, vinfo, finfo);
@@ -208,6 +208,7 @@ int main()
     bella(100, fbp, vinfo, finfo);
     kevin_a(150, fbp, vinfo, finfo);
     kevin_f(200, fbp, vinfo, finfo);
+
 
     munmap(fbp, screensize);
     close(fbfd);
