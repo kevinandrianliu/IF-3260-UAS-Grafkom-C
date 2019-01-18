@@ -6,8 +6,15 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include "utilities.h"
+#include <time.h>
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
+
+void delay(unsigned int ms)
+{
+    clock_t goal = ms + clock();
+    while (goal > clock());
+}
 
 void nama( int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
     render_a(336, y, fbp, vinfo, finfo);
@@ -205,13 +212,30 @@ int main()
     x = 0; y = 0;       // Where we are going to put the pixel
 
     // Figure out where in memory to put the pixel
-    clear_screen(fbp,800,600,vinfo,finfo);
-    nama(50, fbp, vinfo, finfo);
-    bella(100, fbp, vinfo, finfo);
-    yora(150,fbp,vinfo, finfo);
-    kevin_a(200, fbp, vinfo, finfo);
-    kevin_f(250, fbp, vinfo, finfo);
-    tere(300, fbp, vinfo, finfo);
+    
+    while(y>=-500){
+        clear_screen(fbp,800,600,vinfo,finfo);
+        if(y+250>=0){nama(y+250, fbp, vinfo, finfo);}
+        if(y+300>=0){bella(y+300, fbp, vinfo, finfo);}
+        if(y+350>=0){yora(y+350,fbp,vinfo, finfo);}
+        if(y+400>=0){kevin_a(y+400, fbp, vinfo, finfo);}
+        if(y+450>0){kevin_f(y+450, fbp, vinfo, finfo);}
+        if(y+500>0){tere(y+500, fbp, vinfo, finfo);}
+        y=y-1;
+        delay(25000);
+    }
+    /*
+    while(y>=-950){
+        clear_screen(fbp,800,600,vinfo,finfo);
+        if(y+600>=0){nama(y+600, fbp, vinfo, finfo);}
+        if(y+650>=0){bella(y+650, fbp, vinfo, finfo);}
+        if(y+700>=0){yora(y+700,fbp,vinfo, finfo);}
+        if(y+750>=0){kevin_a(y+850, fbp, vinfo, finfo);}
+        if(y+800>0){kevin_f(y+900, fbp, vinfo, finfo);}
+        if(y+950>0){tere(y+950, fbp, vinfo, finfo);}
+        y=y-1;
+        delay(25000);
+    }*/
 
 
     munmap(fbp, screensize);
