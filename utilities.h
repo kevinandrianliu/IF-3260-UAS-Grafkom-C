@@ -1,6 +1,14 @@
 #ifndef __UTILITIES_H__
 #define __UTILITIES_H__
 
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <linux/fb.h>
+#include <sys/mman.h>
+#include <sys/ioctl.h>
+
 void render_a(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
 void render_b(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
 void render_d(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
@@ -22,5 +30,6 @@ void render_u(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb
 void render_w(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
 void render_y(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
 void pixel_color(char *fbp, long int location, int b, int g, int r);
+void clear_screen(char * framebuffer, unsigned int x_size, unsigned int y_size, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
 
 #endif
