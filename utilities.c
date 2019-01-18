@@ -405,7 +405,35 @@ void render_n(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb
 
 }
 void render_o(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int location;
+    int i, j;
 
+    //Mengikuti ukuran karakter 16x20 pixel
+
+    for (i = 4; i < 12; i++) {
+        for (j = 0; j < 4; j++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+        for (j = 16; j < 20; j++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (j=4; j<16; j++) {
+        for (i = 0; i < 4; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+        for (i = 12; i < 16; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
 }
 void render_p(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
 	    long int location;
@@ -521,10 +549,66 @@ void render_r(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb
 
 }
 void render_s(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int location;
+    int i, j;
 
+    //Mengikuti ukuran karakter 16x20 pixel
+
+    for (j = 0; j < 4; j++) {
+        for (i = 4; i < 16; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (j=4; j<8; j++) {
+        for (i = 0; i < 4; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (j=8; j<12; j++) {
+        for (i = 4; i < 12; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (j=12; j<16; j++) {
+        for (i = 12; i < 16; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (j=16; j<20; j++) {
+        for (i = 0; i < 12; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
 }
 void render_t(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int location;
+    int i, j;
 
+    //Mengikuti ukuran karakter 16x20 pixel
+    for (j = 0; j < 4; j++) {
+        for (i = 0; i < 12; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (j=4; j<20; j++) {
+        for (i = 4; i < 8; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
 }
 void render_u(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
 	long int location;
@@ -610,7 +694,44 @@ void render_v(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb
 
 }
 void render_w(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int location;
+    int i, j;
 
+    //Mengikuti ukuran karakter 20x20 pixel
+
+    for (j=0; j<16; j++) {
+        for (i = 0; i < 4; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+        for (i = 16; i < 20; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (j = 8; j < 16; j++) {
+        for (i = 8; i < 12; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (j = 16; j < 20; j++) {
+        for (i = 4; i < 8; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (j = 16; j < 20; j++) {
+        for (i = 12; i < 16; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                               (y+j+vinfo.yoffset) * finfo.line_length;
+        pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
 }
 void render_y(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
 	long int location;
