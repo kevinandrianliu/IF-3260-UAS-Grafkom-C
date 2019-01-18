@@ -127,6 +127,36 @@ void kevin_a(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scr
     render_g(720, y, fbp, vinfo, finfo);
 }
 
+void kevin_f(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) {
+
+    render_kotak(80, y, fbp, vinfo, finfo);    
+
+    render_k(106, y, fbp, vinfo, finfo);
+    render_e(106+25, y, fbp, vinfo, finfo);
+    render_v(106+45, y, fbp, vinfo, finfo);
+    render_i(106+65, y, fbp, vinfo, finfo);
+    render_n(106+75, y, fbp, vinfo, finfo);
+
+    render_f(106+105, y, fbp, vinfo, finfo);
+    render_e(106+125, y, fbp, vinfo, finfo);
+    render_r(106+145, y, fbp, vinfo, finfo);
+    render_n(106+165, y, fbp, vinfo, finfo);
+    render_a(106+185, y, fbp, vinfo, finfo);
+    render_l(106+205, y, fbp, vinfo, finfo);
+    render_d(106+220, y, fbp, vinfo, finfo);
+    render_y(106+240, y, fbp, vinfo, finfo);
+    
+
+    render_strip(580, y, fbp, vinfo, finfo);
+
+    render_j(600, y, fbp, vinfo, finfo);
+    render_a(620, y, fbp, vinfo, finfo);
+    render_k(640, y, fbp, vinfo, finfo);
+    render_a(665, y, fbp, vinfo, finfo);
+    render_r(685, y, fbp, vinfo, finfo);
+    render_t(705, y, fbp, vinfo, finfo);
+    render_a(720, y, fbp, vinfo, finfo);
+}
 int main()
 {
     int fbfd = 0;
@@ -173,34 +203,11 @@ int main()
     x = 0; y = 0;       // Where we are going to put the pixel
 
     // Figure out where in memory to put the pixel
-    for (y = 0; y < vinfo.yres; y++)
-        for (x = 0; x < vinfo.xres; x++) {
-
-            location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-                       (y+vinfo.yoffset) * finfo.line_length;
-
-        if (((y < 80)||(x <80))||((y > 520)||(x > 720))) {
-        pixel_color(fbp, location, 0, 0, 0);
-        } else if (vinfo.bits_per_pixel == 32) {
-                /* *(fbp + location) = 255;        // Some blue
-                *(fbp + location + 1) = 15+x/2;     // A little green
-                *(fbp + location + 2) = 200-y/5;    // A lot of red
-                *(fbp + location + 3) = 0;      // No transparency */
-        pixel_color(fbp, location, 0, 0, 0);
-
-        //location += 4;
-            } else  { //assume 16bpp
-                int b = 0;
-                int g = 0;     // A little green
-                int r = 0;    // A lot of red
-                unsigned short int t = r<<11 | g << 5 | b;
-                *((unsigned short int*)(fbp + location)) = t;
-            }
-
-        }
+    clear_screen(fbp,800,600,vinfo,finfo);
 
     bella(100, fbp, vinfo, finfo);
     kevin_a(150, fbp, vinfo, finfo);
+    kevin_f(200, fbp, vinfo, finfo);
 
     munmap(fbp, screensize);
     close(fbfd);
