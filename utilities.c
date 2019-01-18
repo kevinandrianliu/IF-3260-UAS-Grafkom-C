@@ -1,7 +1,33 @@
 #include "utilities.h"
 
 void render_a(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int location;
 
+    //16x20
+    for (int j = 0; j < 4; j++) {
+        for (int i = 4; i < 12; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int j = 8; j < 12; j++) {
+        for (int i = 4; i < 12; i++) {
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int i = 0; i < 4; i++){
+        for (int j = 4; j < 20; j++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int i = 12; i < 16; i++){
+        for (int j = 4; j < 20; j++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
 }
 void render_b(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
 	    long int location;
@@ -95,7 +121,30 @@ void render_d(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb
 
 }
 void render_e(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int location;
 
+    for (int j = 0; j < 20; j++){
+        for (int i = 0; i < 4; i++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int i = 4; i < 16; i++){
+        for (int j = 0; j < 4; j++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+        for (int j = 16; j < 20; j++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int i = 4; i < 12; i++){
+        for (int j = 8; j < 12; j++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
 }
 void render_f(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
 	long int location;
@@ -130,7 +179,38 @@ void render_f(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb
 
 }
 void render_g(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int location;
 
+    for (int j = 0; j < 4; j++){
+        for (int i = 4; i < 16; i++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int j = 4; j < 16; j++){
+        for (int i = 0; i < 4; i++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int j = 16; j < 20; j++){
+        for (int i = 4; i < 16; i++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int j = 8; j < 16; j++){
+        for (int i = 12; i < 16; i++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int j = 8; j < 12; j++){
+        for (int i = 8; i < 12; i++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
 }
 void render_i(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
 	long int location;
@@ -148,7 +228,26 @@ void render_i(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb
 
 }
 void render_j(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int location;
 
+    for (int j = 0; j < 16; j++){
+        for (int i = 12; i < 16; i++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int j = 16; j < 20; j++){
+        for (int i = 4; i < 12; i++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
+    for (int j = 12; j < 16; j++){
+        for (int i = 0; i < 4; i++){
+            location = (x+i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+j+vinfo.yoffset) * finfo.line_length;
+            pixel_color(fbp, location, 255, 255, 255);
+        }
+    }
 }
 void render_k(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
 	    long int location;
@@ -435,7 +534,7 @@ void render_u(int x, int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb
         for (xx = x; xx < x+4; xx++) {
 
             location = (xx+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-                       (yy+vpixel_color(fbp, location, 255, 255, 255);info.yoffset) * finfo.line_length;
+                       (yy+vinfo.yoffset) * finfo.line_length;
 
             pixel_color(fbp, location, 255, 255, 255);
 
