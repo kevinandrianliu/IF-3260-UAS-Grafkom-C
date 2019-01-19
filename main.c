@@ -5,7 +5,7 @@
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
-#include <utilities.h>
+#include "utilities.h"
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
 
