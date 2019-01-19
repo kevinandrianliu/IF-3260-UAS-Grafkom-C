@@ -5,13 +5,12 @@
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
-#include "utilities.h"
 #include <time.h>
+#include "utilities.h"
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
 
-void delay(unsigned int ms)
-{
+void delay(unsigned int ms){
     clock_t goal = ms + clock();
     while (goal > clock());
 }
@@ -30,19 +29,17 @@ void yora(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screen
     render_n(136, y, fbp, vinfo, finfo);
     render_d(156, y, fbp, vinfo, finfo);
     render_a(176, y, fbp, vinfo, finfo);
-    
-    render_y(206, y, fbp, vinfo, finfo);
-    render_o(222, y, fbp, vinfo, finfo);
-    render_r(242, y, fbp, vinfo, finfo);
-    render_a(262, y, fbp, vinfo, finfo);
-    
-    render_i(292, y, fbp, vinfo, finfo);
-    render_s(300, y, fbp, vinfo, finfo);
-    render_l(320, y, fbp, vinfo, finfo);
-    render_a(336, y, fbp, vinfo, finfo);
-    render_m(356, y, fbp, vinfo, finfo);
-    render_i(380, y, fbp, vinfo, finfo);
-    //render_strip(400, y, fbp, vinfo, finfo);
+    render_y(204, y, fbp, vinfo, finfo);
+    render_o(220, y, fbp, vinfo, finfo);
+    render_r(240, y, fbp, vinfo, finfo);
+    render_a(260, y, fbp, vinfo, finfo);
+    render_i(288, y, fbp, vinfo, finfo);
+    render_s(296, y, fbp, vinfo, finfo);
+    render_l(316, y, fbp, vinfo, finfo);
+    render_a(332, y, fbp, vinfo, finfo);
+    render_m(352, y, fbp, vinfo, finfo);
+    render_i(376, y, fbp, vinfo, finfo);
+    render_strip(400, y, fbp, vinfo, finfo);
     render_p(604, y, fbp, vinfo, finfo);
     render_a(624, y, fbp, vinfo, finfo);
     render_d(644, y, fbp, vinfo, finfo);
@@ -54,18 +51,18 @@ void yora(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screen
 void tere(int y,char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
     render_kotak(80, y, fbp, vinfo, finfo);
     render_t(106, y, fbp, vinfo, finfo);
-    render_e(122, y, fbp, vinfo, finfo);
-    render_r(142, y, fbp, vinfo, finfo);
-    render_e(162, y, fbp, vinfo, finfo);
-    render_s(182, y, fbp, vinfo, finfo);
-    render_a(202, y, fbp, vinfo, finfo);
-    //render_strip(520, y, fbp, vinfo, finfo);
-    render_p(540, y, fbp, vinfo, finfo);
-    render_e(560, y, fbp, vinfo, finfo);
-    render_k(580, y, fbp, vinfo, finfo);
-    render_a(600, y, fbp, vinfo, finfo);
-    render_n(620, y, fbp, vinfo, finfo);
-    render_b(640, y, fbp, vinfo, finfo);
+    render_e(126, y, fbp, vinfo, finfo);
+    render_r(146, y, fbp, vinfo, finfo);
+    render_e(166, y, fbp, vinfo, finfo);
+    render_s(186, y, fbp, vinfo, finfo);
+    render_a(206, y, fbp, vinfo, finfo);
+    render_strip(520, y, fbp, vinfo, finfo);
+    render_p(544, y, fbp, vinfo, finfo);
+    render_e(564, y, fbp, vinfo, finfo);
+    render_k(584, y, fbp, vinfo, finfo);
+    render_a(604, y, fbp, vinfo, finfo);
+    render_n(624, y, fbp, vinfo, finfo);
+    render_b(644, y, fbp, vinfo, finfo);
     render_a(664, y, fbp, vinfo, finfo);
     render_r(684, y, fbp, vinfo, finfo);
     render_u(704, y, fbp, vinfo, finfo);
@@ -92,15 +89,15 @@ void bella(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scree
 
     render_j(106+265, y, fbp, vinfo, finfo);
 
-    //render_strip(580, y, fbp, vinfo, finfo);
+    render_strip(580, y, fbp, vinfo, finfo);
 
-    render_j(588, y, fbp, vinfo, finfo);
-    render_a(608, y, fbp, vinfo, finfo);
-    render_k(628, y, fbp, vinfo, finfo);
-    render_a(648, y, fbp, vinfo, finfo);
-    render_r(668, y, fbp, vinfo, finfo);
-    render_t(684, y, fbp, vinfo, finfo);
-    render_a(704, y, fbp, vinfo, finfo);
+    render_j(600, y, fbp, vinfo, finfo);
+    render_a(620, y, fbp, vinfo, finfo);
+    render_k(640, y, fbp, vinfo, finfo);
+    render_a(665, y, fbp, vinfo, finfo);
+    render_r(685, y, fbp, vinfo, finfo);
+    render_t(705, y, fbp, vinfo, finfo);
+    render_a(720, y, fbp, vinfo, finfo);
 }
 
 void kevin_a(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) {
@@ -123,17 +120,17 @@ void kevin_a(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scr
 
     render_l(106+255, y, fbp, vinfo, finfo);
 
-    //render_strip(540, y, fbp, vinfo, finfo);
+    render_strip(540, y, fbp, vinfo, finfo);
 
-    render_t(544, y, fbp, vinfo, finfo);
-    render_a(564, y, fbp, vinfo, finfo);
-    render_n(584, y, fbp, vinfo, finfo);
-    render_g(604, y, fbp, vinfo, finfo);
-    render_e(624, y, fbp, vinfo, finfo);
-    render_r(644, y, fbp, vinfo, finfo);
-    render_a(664, y, fbp, vinfo, finfo);
-    render_n(684, y, fbp, vinfo, finfo);
-    render_g(704, y, fbp, vinfo, finfo);
+    render_t(560, y, fbp, vinfo, finfo);
+    render_a(580, y, fbp, vinfo, finfo);
+    render_n(600, y, fbp, vinfo, finfo);
+    render_g(620, y, fbp, vinfo, finfo);
+    render_e(640, y, fbp, vinfo, finfo);
+    render_r(660, y, fbp, vinfo, finfo);
+    render_a(680, y, fbp, vinfo, finfo);
+    render_n(700, y, fbp, vinfo, finfo);
+    render_g(720, y, fbp, vinfo, finfo);
 }
 
 void kevin_f(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) {
@@ -156,15 +153,15 @@ void kevin_f(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scr
     render_y(106+240, y, fbp, vinfo, finfo);
     
 
-    //render_strip(580, y, fbp, vinfo, finfo);
+    render_strip(580, y, fbp, vinfo, finfo);
 
-    render_j(588, y, fbp, vinfo, finfo);
-    render_a(608, y, fbp, vinfo, finfo);
-    render_k(628, y, fbp, vinfo, finfo);
-    render_a(648, y, fbp, vinfo, finfo);
-    render_r(668, y, fbp, vinfo, finfo);
-    render_t(684, y, fbp, vinfo, finfo);
-    render_a(704, y, fbp, vinfo, finfo);
+    render_j(600, y, fbp, vinfo, finfo);
+    render_a(620, y, fbp, vinfo, finfo);
+    render_k(640, y, fbp, vinfo, finfo);
+    render_a(665, y, fbp, vinfo, finfo);
+    render_r(685, y, fbp, vinfo, finfo);
+    render_t(705, y, fbp, vinfo, finfo);
+    render_a(720, y, fbp, vinfo, finfo);
 }
 int main()
 {
@@ -212,32 +209,30 @@ int main()
     x = 0; y = 0;       // Where we are going to put the pixel
 
     // Figure out where in memory to put the pixel
-    
-    while(y>=-500){
-        clear_screen(fbp,800,600,vinfo,finfo);
-        if(y+250>=0){nama(y+250, fbp, vinfo, finfo);}
-        if(y+300>=0){bella(y+300, fbp, vinfo, finfo);}
-        if(y+350>=0){yora(y+350,fbp,vinfo, finfo);}
-        if(y+400>=0){kevin_a(y+400, fbp, vinfo, finfo);}
-        if(y+450>0){kevin_f(y+450, fbp, vinfo, finfo);}
-        if(y+500>0){tere(y+500, fbp, vinfo, finfo);}
-        y=y-1;
-        delay(25000);
+    clear_screen(fbp,800,600,vinfo,finfo);
+
+    //bella(100, fbp, vinfo, finfo);
+    //kevin_a(150, fbp, vinfo, finfo);
+    //kevin_f(200, fbp, vinfo, finfo);
+    //yora(250,fbp,vinfo,finfo);
+    //tere(300,fbp,vinfo,finfo);
+
+    y = 762;
+    for (;;){
+        clear_screen(fbp,1366,762,vinfo,finfo);
+        if(y>=0){nama(y, fbp, vinfo, finfo);}
+        if(y+50>=0){bella(y+50, fbp, vinfo, finfo);}
+        if(y+100>=0){yora(y+100,fbp,vinfo, finfo);}
+        if(y+150>=0){kevin_a(y+150, fbp, vinfo, finfo);}
+        if(y+200>=0){kevin_f(y+200, fbp, vinfo, finfo);}
+        if(y+250>=0){tere(y+250, fbp, vinfo, finfo);}
+
+        y -= 3;
+        delay(50000);
+
+        if (y < -300)
+            break;
     }
-    /*
-    while(y>=-950){
-        clear_screen(fbp,800,600,vinfo,finfo);
-        if(y+600>=0){nama(y+600, fbp, vinfo, finfo);}
-        if(y+650>=0){bella(y+650, fbp, vinfo, finfo);}
-        if(y+700>=0){yora(y+700,fbp,vinfo, finfo);}
-        if(y+750>=0){kevin_a(y+850, fbp, vinfo, finfo);}
-        if(y+800>0){kevin_f(y+900, fbp, vinfo, finfo);}
-        if(y+950>0){tere(y+950, fbp, vinfo, finfo);}
-        y=y-1;
-        delay(25000);
-    }*/
-
-
     munmap(fbp, screensize);
     close(fbfd);
     return 0;
