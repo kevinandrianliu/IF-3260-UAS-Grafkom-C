@@ -73,12 +73,12 @@ void tere(int y,char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeni
     render_s(186, y, b, g, r, fbp, vinfo, finfo);
     render_a(206, y, b, g, r, fbp, vinfo, finfo);
     //render_strip(520, y, 150, 150, 150, fbp, vinfo, finfo);
-    render_p(560, y, b, g, r, fbp, vinfo, finfo);
-    render_e(580, y, b, g, r, fbp, vinfo, finfo);
-    render_k(600, y, b, g, r, fbp, vinfo, finfo);
-    render_a(620, y, b, g, r, fbp, vinfo, finfo);
-    render_n(640, y, b, g, r, fbp, vinfo, finfo);
-    render_b(660, y, b, g, r, fbp, vinfo, finfo);
+    render_p(556, y, b, g, r, fbp, vinfo, finfo);
+    render_e(576, y, b, g, r, fbp, vinfo, finfo);
+    render_k(596, y, b, g, r, fbp, vinfo, finfo);
+    render_a(616, y, b, g, r, fbp, vinfo, finfo);
+    render_n(636, y, b, g, r, fbp, vinfo, finfo);
+    render_b(656, y, b, g, r, fbp, vinfo, finfo);
     render_a(680, y, b, g, r, fbp, vinfo, finfo);
     render_r(700, y, b, g, r, fbp, vinfo, finfo);
     render_u(720, y, b, g, r, fbp, vinfo, finfo);
@@ -111,9 +111,9 @@ void bella(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scree
 
     //render_strip(580, y, 150, 150, 150, fbp, vinfo, finfo);
 
-    render_j(600, y, b, g, r, fbp, vinfo, finfo);
-    render_a(620, y, b, g, r, fbp, vinfo, finfo);
-    render_k(640, y, b, g, r, fbp, vinfo, finfo);
+    render_j(605, y, b, g, r, fbp, vinfo, finfo);
+    render_a(625, y, b, g, r, fbp, vinfo, finfo);
+    render_k(645, y, b, g, r, fbp, vinfo, finfo);
     render_a(665, y, b, g, r, fbp, vinfo, finfo);
     render_r(685, y, b, g, r, fbp, vinfo, finfo);
     render_t(705, y, b, g, r, fbp, vinfo, finfo);
@@ -183,9 +183,9 @@ void kevin_f(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scr
 
     //render_strip(580, y, 150, 150, 150, fbp, vinfo, finfo);
 
-    render_j(600, y, b, g, r, fbp, vinfo, finfo);
-    render_a(620, y, b, g, r, fbp, vinfo, finfo);
-    render_k(640, y, b, g, r, fbp, vinfo, finfo);
+    render_j(605, y, b, g, r, fbp, vinfo, finfo);
+    render_a(625, y, b, g, r, fbp, vinfo, finfo);
+    render_k(645, y, b, g, r, fbp, vinfo, finfo);
     render_a(665, y, b, g, r, fbp, vinfo, finfo);
     render_r(685, y, b, g, r, fbp, vinfo, finfo);
     render_t(705, y, b, g, r, fbp, vinfo, finfo);
