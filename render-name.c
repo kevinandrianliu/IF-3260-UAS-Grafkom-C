@@ -193,60 +193,55 @@ void kevin_f(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scr
 }
 int main()
 {
-    int fbfd = 0;
+    int fbfd;
     struct fb_var_screeninfo vinfo;
     struct fb_fix_screeninfo finfo;
-    long int screensize = 0;
-    char *fbp = 0;
-    int x = 0, y = 0;
-    long int location = 0;
+    long int screensize;
+    char *fbp;
 
-    // Open the file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
     if (fbfd == -1) {
-        perror("Error: cannot open framebuffer device");
+        // Framebuffer can't be opened
         exit(1);
     }
-    printf("The framebuffer device was opened successfully.\n");
 
-    // Get fixed screen information
     if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo) == -1) {
-        perror("Error reading fixed information");
+        // Error reading fixed screen information
         exit(2);
     }
 
-    // Get variable screen information
     if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo) == -1) {
-        perror("Error reading variable information");
+        // Error reading variable screen information
         exit(3);
     }
 
-    printf("%dx%d, %dbpp\n", vinfo.xres, vinfo.yres, vinfo.bits_per_pixel);
-
-    // Figure out the size of the screen in bytes
+    // Calculating the screen size in bytes
     screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
 
-    // Map the device to memory
-    fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
+    // Map the framebuffer into memory
+    fbp = (char *) mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
     if ((int)fbp == -1) {
-        perror("Error: failed to map framebuffer device to memory");
+        // Mapping failed
         exit(4);
     }
-    printf("The framebuffer device was mapped to memory successfully.\n");
-
-    x = 0; y = 0;
 
     clear_screen(fbp,800,600,vinfo,finfo);
 
-    y = 600;
+    int y = 600;
     for (;;){
         clear_screen(fbp,800,600,vinfo,finfo);
-        if(y>=0){nama(y,fbp, vinfo, finfo);}
-        if(y+50>=0){bella(y+50, fbp, vinfo, finfo);}
-        if(y+100>=0){yora(y+100,fbp,vinfo, finfo);}
-        if(y+150>=0){kevin_a(y+150, fbp, vinfo, finfo);}
-        if(y+200>=0){kevin_f(y+200, fbp, vinfo, finfo);}
-        if(y+250>=0){tere(y+250, fbp, vinfo, finfo);}
+        if (y>=0)
+            nama(y,fbp, vinfo, finfo);
+        if (y+50>=0)
+            bella(y+50, fbp, vinfo, finfo);
+        if (y+100>=0)
+            yora(y+100,fbp,vinfo, finfo);
+        if (y+150>=0)
+            kevin_a(y+150, fbp, vinfo, finfo);
+        if (y+200>=0)
+            kevin_f(y+200, fbp, vinfo, finfo);
+        if (y+250>=0)
+            tere(y+250, fbp, vinfo, finfo);
 
         y -= 3;
         delay(50000);
