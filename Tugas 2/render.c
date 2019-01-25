@@ -121,6 +121,55 @@ void clear_screen(char * framebuffer, unsigned int x_size, unsigned int y_size, 
     }
 }
 
+void putpixel(int x, int y, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
+    *(framebuffer + mem_location) = 255;
+    *(framebuffer + mem_location + 1) = 255;
+    *(framebuffer + mem_location + 2) = 255;
+    *(framebuffer + mem_location + 3) = 0; 
+}
+
+// Function to put pixels 
+// at subsequence points 
+void drawCircle(int xc, int yc, int x, int y, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) 
+{ 
+    putpixel(xc+x, yc+y, framebuffer, vinfo, finfo); 
+    putpixel(xc-x, yc+y, framebuffer, vinfo, finfo); 
+    putpixel(xc+x, yc-y, framebuffer, vinfo, finfo); 
+    putpixel(xc-x, yc-y, framebuffer, vinfo, finfo); 
+    putpixel(xc+y, yc+x, framebuffer, vinfo, finfo); 
+    putpixel(xc-y, yc+x, framebuffer, vinfo, finfo); 
+    putpixel(xc+y, yc-x, framebuffer, vinfo, finfo); 
+    putpixel(xc-y, yc-x, framebuffer, vinfo, finfo); 
+}
+  
+// Function for circle-generation 
+// using Bresenham's algorithm 
+void circleBres(int xc, int yc, int r, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) 
+{ 
+    int x = 0, y = r; 
+    int d = 3 - 2 * r; 
+    drawCircle(xc, yc, x, y, framebuffer, vinfo, finfo); 
+    while (y >= x) 
+    { 
+        // for each pixel we will 
+        // draw all eight pixels 
+          
+        x++; 
+  
+        // check for decision parameter 
+        // and correspondingly  
+        // update d, x, y 
+        if (d > 0) 
+        { 
+            y--;  
+            d = d + 4 * (x - y) + 10; 
+        } 
+        else {d = d + 4 * x + 6;} 
+        drawCircle(xc, yc, x, y, framebuffer, vinfo, finfo); 
+    }
+}
+
 int main()
 {
     int fbfd;
@@ -155,11 +204,8 @@ int main()
         exit(4);
     }
 
-    clear_screen(fbp,1366,762,vinfo,finfo);
-    bresenham(100,300,1000,100,fbp,vinfo,finfo);
-    bresenham(100,300,300,700,fbp,vinfo,finfo);
-    bresenham(100,300,1000,700,fbp,vinfo,finfo);
-    bresenham(100,300,200,100,fbp,vinfo,finfo);
+    clear_screen(fbp,800,600,vinfo,finfo);
+    circleBres(400,500,50,fbp,vinfo,finfo); 
     munmap(fbp, screensize);
     close(fbfd);
 
