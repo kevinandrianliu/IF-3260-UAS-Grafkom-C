@@ -18,17 +18,10 @@ int sign(float i){
 }
 
 void bresenham(int x0, int y0, int x1, int y1, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-    float deltax;
-    float deltay;
-    float deltaerr;
+    int m_new = 2 * (y1 - y0);
+    int slope_error_new = m_new - (x1 - x0);
 
-    deltax = ((double)x1) - ((double)x0);
-    deltay = ((double)y1) - ((double)y0);
-    deltaerr = abs(deltay/deltax);
-
-    float error = 0.0;
     int y = y0;
-
     for (int x = x0; x <= x1; x++){
         long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
 
@@ -37,11 +30,11 @@ void bresenham(int x0, int y0, int x1, int y1, char * framebuffer, struct fb_var
         *(framebuffer + mem_location + 2) = 255;
         *(framebuffer + mem_location + 3) = 0;
 
-        error += deltaerr;
+        slope_error_new += m_new;
 
-        if (error >= 0.2){
-            y += sign(deltay) * 1;
-            error -= 1.0;
+        if (slope_error_new >= 0){
+            y++;
+            slope_error_new -= 2 * (x1 - x0);
         }
     }
 }
