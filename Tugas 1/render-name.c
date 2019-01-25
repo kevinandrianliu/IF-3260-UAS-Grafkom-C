@@ -191,6 +191,71 @@ void kevin_f(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scr
     render_t(705, y, b, g, r, fbp, vinfo, finfo);
     render_a(720, y, b, g, r, fbp, vinfo, finfo);
 }
+
+void fildah(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    int b = 200;
+    int g = 100;
+    int r = 0;
+
+    render_kotak(80, y, 255, 255, 255, fbp, vinfo, finfo);    
+
+    render_f(106, y, b, g, r, fbp, vinfo, finfo);
+    render_i(106+20, y, b, g, r, fbp, vinfo, finfo);
+    render_l(106+30, y, b, g, r, fbp, vinfo, finfo);
+    render_d(106+45, y, b, g, r, fbp, vinfo, finfo);
+    render_a(106+65, y, b, g, r, fbp, vinfo, finfo);
+    render_h(106+85, y, b, g, r, fbp, vinfo, finfo);
+
+    render_a(106+115, y, b, g, r, fbp, vinfo, finfo);
+    render_n(106+135, y, b, g, r, fbp, vinfo, finfo);
+    render_a(106+155, y, b, g, r, fbp, vinfo, finfo);
+    render_n(106+175, y, b, g, r, fbp, vinfo, finfo);
+    render_d(106+195, y, b, g, r, fbp, vinfo, finfo);
+    render_a(106+215, y, b, g, r, fbp, vinfo, finfo);
+
+    render_m(600, y, b, g, r, fbp, vinfo, finfo);
+    render_a(625, y, b, g, r, fbp, vinfo, finfo);
+    render_g(645, y, b, g, r, fbp, vinfo, finfo);
+    render_e(665, y, b, g, r, fbp, vinfo, finfo);
+    render_t(685, y, b, g, r, fbp, vinfo, finfo);
+    render_a(700, y, b, g, r, fbp, vinfo, finfo);
+    render_n(720, y, b, g, r, fbp, vinfo, finfo);
+
+}
+
+void richard(int y, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    int b = 200;
+    int g = 50;
+    int r = 200;
+
+    render_kotak(80, y, 255, 255, 255, fbp, vinfo, finfo);    
+
+    render_r(106, y, b, g, r, fbp, vinfo, finfo);
+    render_i(106+20, y, b, g, r, fbp, vinfo, finfo);
+    render_c(106+30, y, b, g, r, fbp, vinfo, finfo);
+    render_h(106+50, y, b, g, r, fbp, vinfo, finfo);
+    render_a(106+70, y, b, g, r, fbp, vinfo, finfo);
+    render_r(106+90, y, b, g, r, fbp, vinfo, finfo);
+    render_d(106+110, y, b, g, r, fbp, vinfo, finfo);
+
+    render_m(106+140, y, b, g, r, fbp, vinfo, finfo);
+    render_a(106+165, y, b, g, r, fbp, vinfo, finfo);
+    render_t(106+185, y, b, g, r, fbp, vinfo, finfo);
+    render_t(106+200, y, b, g, r, fbp, vinfo, finfo);
+    render_h(106+215, y, b, g, r, fbp, vinfo, finfo);
+    render_e(106+235, y, b, g, r, fbp, vinfo, finfo);
+    render_w(106+255, y, b, g, r, fbp, vinfo, finfo);
+
+    render_b(595, y, b, g, r, fbp, vinfo, finfo);
+    render_a(620, y, b, g, r, fbp, vinfo, finfo);
+    render_n(640, y, b, g, r, fbp, vinfo, finfo);
+    render_d(660, y, b, g, r, fbp, vinfo, finfo);
+    render_u(680, y, b, g, r, fbp, vinfo, finfo);
+    render_n(700, y, b, g, r, fbp, vinfo, finfo);
+    render_g(720, y, b, g, r, fbp, vinfo, finfo);
+
+}
+
 int main()
 {
     int fbfd;
@@ -230,23 +295,27 @@ int main()
     int y = 600;
     for (;;){
         clear_screen(fbp,800,600,vinfo,finfo);
-        if (y>=0)
+        if ((y>=0) && (y<600))
             nama(y,fbp, vinfo, finfo);
-        if (y+50>=0)
+        if ((y+50>=0) && (y+50<600))
             bella(y+50, fbp, vinfo, finfo);
-        if (y+100>=0)
+        if ((y+100>=0) && (y+100<600))
             yora(y+100,fbp,vinfo, finfo);
-        if (y+150>=0)
+        if ((y+150>=0) && (y+150<600))
             kevin_a(y+150, fbp, vinfo, finfo);
-        if (y+200>=0)
+        if ((y+200>=0) && (y+200<600))
             kevin_f(y+200, fbp, vinfo, finfo);
-        if (y+250>=0)
+        if ((y+250>=0) && (y+250<600))
             tere(y+250, fbp, vinfo, finfo);
+        if ((y+300>=0) && (y+300<600))
+            fildah(y+300, fbp, vinfo, finfo);
+        if ((y+350>=0) && (y+350<600))
+            richard(y+350, fbp, vinfo, finfo);
 
         y -= 3;
         delay(50000);
 
-        if (y < -300)
+        if (y < -400)
             break;
     }
     munmap(fbp, screensize);
