@@ -9,32 +9,99 @@
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
 
-int sign(float i){
-    if (i > 0)
-        return 1;
-    if (i < 0)
-        return -1;
-    return 0;
-}
-
 void bresenham(int x0, int y0, int x1, int y1, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-    int m_new = 2 * (y1 - y0);
-    int slope_error_new = m_new - (x1 - x0);
+    if (x0 > x1){
+        int x_temp;
+        int y_temp;
 
-    int y = y0;
-    for (int x = x0; x <= x1; x++){
-        long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
+        x_temp = x0;
+        y_temp = y0;
+        x0 = x1;
+        y0 = y1;
+        x1 = x_temp;
+        y1 = y_temp;
+    }
 
-        *(framebuffer + mem_location) = 255;
-        *(framebuffer + mem_location + 1) = 255;
-        *(framebuffer + mem_location + 2) = 255;
-        *(framebuffer + mem_location + 3) = 0;
+    float gradien = (y1 - y0)/(x1 - x0);
+    if ((abs(gradien) >= 0) && (abs(gradien) <= 1)){
+        int y = y0;
+        int eps = 0;
 
-        slope_error_new += m_new;
+        if (y1 >= y0){
+            int dx = x1 - x0;
+            int dy = y1 - y0;
+            for (int x = x0; x <= x1; x++){
+                long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
 
-        if (slope_error_new >= 0){
-            y++;
-            slope_error_new -= 2 * (x1 - x0);
+                *(framebuffer + mem_location) = 255;
+                *(framebuffer + mem_location + 1) = 255;
+                *(framebuffer + mem_location + 2) = 255;
+                *(framebuffer + mem_location + 3) = 0;
+
+                eps += dy;
+                if ((eps << 1) >= dx){
+                    y++;
+                    eps -= dx;
+                }
+            }
+        } else {    //y1 < y0
+            int dx = x1 - x0;
+            int dy = y0 - y1;
+            for (int x = x0; x <= x1; x++){
+                long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
+
+                *(framebuffer + mem_location) = 255;
+                *(framebuffer + mem_location + 1) = 255;
+                *(framebuffer + mem_location + 2) = 255;
+                *(framebuffer + mem_location + 3) = 0;
+
+                eps += dy;
+                if ((eps << 1) >= dx){
+                    y--;
+                    eps -= dx;
+                }
+            }
+        }
+    } else {
+        int x = x0;
+        int eps = 0;
+
+        if (y1 >= y0){
+            int dx = x1 - x0;
+            int dy = y1 - y0;
+
+            for (int y = y0; y <= y1; y++){
+                long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
+
+                *(framebuffer + mem_location) = 255;
+                *(framebuffer + mem_location + 1) = 255;
+                *(framebuffer + mem_location + 2) = 255;
+                *(framebuffer + mem_location + 3) = 0;
+
+                eps += dx;
+                if ((eps << 1) >= dy){
+                    x++;
+                    eps -= dy;
+                }
+            }
+        } else {    //y1 < y0
+            int dx = x1 - x0;
+            int dy = y0 - y1;
+
+            for (int y = y0; y >= y1; y--){
+                long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
+
+                *(framebuffer + mem_location) = 255;
+                *(framebuffer + mem_location + 1) = 255;
+                *(framebuffer + mem_location + 2) = 255;
+                *(framebuffer + mem_location + 3) = 0;
+
+                eps += dx;
+                if ((eps << 1) >= dy){
+                    x++;
+                    eps -= dy;
+                }
+            }
         }
     }
 }
@@ -51,6 +118,55 @@ void clear_screen(char * framebuffer, unsigned int x_size, unsigned int y_size, 
             *(framebuffer + mem_location + 2) = 0;
             *(framebuffer + mem_location + 3) = 0;
         }
+    }
+}
+
+void putpixel(int x, int y, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
+    *(framebuffer + mem_location) = 255;
+    *(framebuffer + mem_location + 1) = 255;
+    *(framebuffer + mem_location + 2) = 255;
+    *(framebuffer + mem_location + 3) = 0; 
+}
+
+// Function to put pixels 
+// at subsequence points 
+void drawCircle(int xc, int yc, int x, int y, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) 
+{ 
+    putpixel(xc+x, yc+y, framebuffer, vinfo, finfo); 
+    putpixel(xc-x, yc+y, framebuffer, vinfo, finfo); 
+    putpixel(xc+x, yc-y, framebuffer, vinfo, finfo); 
+    putpixel(xc-x, yc-y, framebuffer, vinfo, finfo); 
+    putpixel(xc+y, yc+x, framebuffer, vinfo, finfo); 
+    putpixel(xc-y, yc+x, framebuffer, vinfo, finfo); 
+    putpixel(xc+y, yc-x, framebuffer, vinfo, finfo); 
+    putpixel(xc-y, yc-x, framebuffer, vinfo, finfo); 
+}
+  
+// Function for circle-generation 
+// using Bresenham's algorithm 
+void circleBres(int xc, int yc, int r, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) 
+{ 
+    int x = 0, y = r; 
+    int d = 3 - 2 * r; 
+    drawCircle(xc, yc, x, y, framebuffer, vinfo, finfo); 
+    while (y >= x) 
+    { 
+        // for each pixel we will 
+        // draw all eight pixels 
+          
+        x++; 
+  
+        // check for decision parameter 
+        // and correspondingly  
+        // update d, x, y 
+        if (d > 0) 
+        { 
+            y--;  
+            d = d + 4 * (x - y) + 10; 
+        } 
+        else {d = d + 4 * x + 6;} 
+        drawCircle(xc, yc, x, y, framebuffer, vinfo, finfo); 
     }
 }
 
@@ -88,8 +204,8 @@ int main()
         exit(4);
     }
 
-    clear_screen(fbp,1366,762,vinfo,finfo);
-    bresenham(100,100,1200,200,fbp,vinfo,finfo);
+    clear_screen(fbp,800,600,vinfo,finfo);
+    circleBres(400,500,50,fbp,vinfo,finfo); 
     munmap(fbp, screensize);
     close(fbfd);
 
