@@ -22,89 +22,7 @@ void bresenham(int x0, int y0, int x1, int y1, char * framebuffer, struct fb_var
         y1 = y_temp;
     }
 
-    // if (x1 >= y1){
-    //     int y = y0;
-    //     int eps = 0;
-
-    //     if (y1 >= y0){
-    //         int dx = x1 - x0;
-    //         int dy = y1 - y0;
-    //         for (int x = x0; x <= x1; x++){
-    //             long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
-
-    //             *(framebuffer + mem_location) = 255;
-    //             *(framebuffer + mem_location + 1) = 255;
-    //             *(framebuffer + mem_location + 2) = 255;
-    //             *(framebuffer + mem_location + 3) = 0;
-
-    //             eps += dy;
-    //             if ((eps << 1) >= dx){
-    //                 y++;
-    //                 eps -= dx;
-    //             }
-    //         }
-    //     } else {
-    //         int dx = x1 - x0;
-    //         int dy = y0 - y1;
-    //         for (int x = x0; x <= x1; x++){
-    //             long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
-
-    //             *(framebuffer + mem_location) = 255;
-    //             *(framebuffer + mem_location + 1) = 255;
-    //             *(framebuffer + mem_location + 2) = 255;
-    //             *(framebuffer + mem_location + 3) = 0;
-
-    //             eps += dy;
-    //             if ((eps << 1) >= dx){
-    //                 y--;
-    //                 eps -= dx;
-    //             }
-    //         }
-    //     }
-    // } else {
-    //     int x = x0;
-    //     int eps = 0;
-
-    //     if (y1 >= y0){
-    //         int dx = x1 - x0;
-    //         int dy = y1 - y0;
-
-    //         for (int y = y0; y <= y1; y++){
-    //             long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
-
-    //             *(framebuffer + mem_location) = 255;
-    //             *(framebuffer + mem_location + 1) = 255;
-    //             *(framebuffer + mem_location + 2) = 255;
-    //             *(framebuffer + mem_location + 3) = 0;
-
-    //             eps += dx;
-    //             if ((eps << 1) >= dy){
-    //                 x++;
-    //                 eps -= dy;
-    //             }
-    //         }
-    //     } else {
-    //         int dx = x1 - x0;
-    //         int dy = y0 - y1;
-    //         for (int y = y0; y <= y1; y++){
-    //             long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
-
-    //             *(framebuffer + mem_location) = 255;
-    //             *(framebuffer + mem_location + 1) = 255;
-    //             *(framebuffer + mem_location + 2) = 255;
-    //             *(framebuffer + mem_location + 3) = 0;
-
-    //             eps += dx;
-    //             if ((eps << 1) >= dy){
-    //                 x--;
-    //                 eps -= dy;
-    //             }
-    //         }
-    //     }
-    // }
-
     float gradien = (y1 - y0)/(x1 - x0);
-
     if ((abs(gradien) >= 0) && (abs(gradien) <= 1)){
         int y = y0;
         int eps = 0;
@@ -170,7 +88,7 @@ void bresenham(int x0, int y0, int x1, int y1, char * framebuffer, struct fb_var
             int dx = x1 - x0;
             int dy = y0 - y1;
 
-            for (int y = y0; y <= y1; y--){
+            for (int y = y0; y >= y1; y--){
                 long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
 
                 *(framebuffer + mem_location) = 255;
@@ -179,27 +97,13 @@ void bresenham(int x0, int y0, int x1, int y1, char * framebuffer, struct fb_var
                 *(framebuffer + mem_location + 3) = 0;
 
                 eps += dx;
-                if ((eps << 1) < dy){
+                if ((eps << 1) >= dy){
                     x++;
                     eps -= dy;
                 }
             }
         }
     }
-
-    long int mem_location = (x1 + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y1 + vinfo.yoffset) * finfo.line_length;
-
-    *(framebuffer + mem_location) = 0;
-    *(framebuffer + mem_location + 1) = 0;
-    *(framebuffer + mem_location + 2) = 255;
-    *(framebuffer + mem_location + 3) = 0;
-
-    mem_location = (x0 + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y0 + vinfo.yoffset) * finfo.line_length;
-
-    *(framebuffer + mem_location) = 0;
-    *(framebuffer + mem_location + 1) = 255;
-    *(framebuffer + mem_location + 2) = 0;
-    *(framebuffer + mem_location + 3) = 0;
 }
 
 void clear_screen(char * framebuffer, unsigned int x_size, unsigned int y_size, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
