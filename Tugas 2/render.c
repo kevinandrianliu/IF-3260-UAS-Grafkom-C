@@ -9,6 +9,12 @@
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
 
+void delay(unsigned int ms){
+    clock_t goal = ms + clock();
+    while (goal > clock());
+}
+
+
 void bresenham(int x0, int y0, int x1, int y1, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
     if (x0 > x1){
         int x_temp;
@@ -204,8 +210,37 @@ int main()
         exit(4);
     }
 
-    clear_screen(fbp,800,600,vinfo,finfo);
-    circleBres(400,500,50,fbp,vinfo,finfo); 
+    int c = 0;
+    int c2 = 0; 
+    int c3 = 0;
+
+    while (1) {
+
+	clear_screen(fbp,800,600,vinfo,finfo);
+
+	if (350-c <= 0) {
+		c = 0;
+	}
+	if (410-c2*2 <= 0) {
+		c2 = 0;
+	}
+	if (430-c3*3 <= 0) {
+		c3 = 0;
+	}
+
+    	bresenham(350-c,450-c,360-c,460-c,fbp,vinfo,finfo);
+    	bresenham(450+c,450-c,440+c,460-c,fbp,vinfo,finfo);
+
+	bresenham(370-c2,430-c2*2,360-c2,410-c2*2,fbp,vinfo,finfo);
+	bresenham(430+c2,430-c2*2,440+c2,410-c2*2,fbp,vinfo,finfo);
+
+	bresenham(400+c3,460-c3*3,410+c3,430-c3*3,fbp,vinfo,finfo);
+
+	circleBres(400,500,50,fbp,vinfo,finfo);
+	c++; c2++; c3++;
+	delay(10000);
+    }
+
     munmap(fbp, screensize);
     close(fbfd);
 
