@@ -176,6 +176,21 @@ void circleBres(int xc, int yc, int r, char * framebuffer, struct fb_var_screeni
     }
 }
 
+void drawPlane(int x0, int y0, int x1, int y1, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    bresenham(x0,y0,x1,y1,fbp,vinfo,finfo);//lurus atas
+    bresenham(x0-9 ,y0+26,x1-47,y1+26,fbp,vinfo,finfo);//lurus bawah
+    bresenham(x0+25,y0+26,x1   ,y1+26,fbp,vinfo,finfo);//lurus bawah
+    bresenham(x0+52,y0+11,x1+23,y1+11,fbp,vinfo,finfo);//lurus tengah
+    bresenham(x0+52,y0+11,x1-15,y1   ,fbp,vinfo,finfo);//runcing
+    bresenham(x0+50,y0+26,x1+25,y1+13,fbp,vinfo,finfo);//runcing
+    bresenham(x0+50,y0   ,x1+25,y1+13,fbp,vinfo,finfo);//runcing
+    bresenham(x0+10,y0+15,x1-10,y1+15,fbp,vinfo,finfo);//tambahan bawah
+    bresenham(x0+9,y0+15,x1-50,y1+41,fbp,vinfo,finfo);//sayap
+    bresenham(x0+40,y0+15,x1-50,y1+41,fbp,vinfo,finfo);//sayap
+    bresenham(x0   ,y0   ,x1-80,y1-15,fbp,vinfo,finfo);//ekor
+    bresenham(x0-10,y0+25,x1-80,y1-15,fbp,vinfo,finfo);//ekor
+}
+
 int main()
 {
     int fbfd;
@@ -213,6 +228,7 @@ int main()
     int c = 0;
     int c2 = 0; 
     int c3 = 0;
+    int r = 0;
 
     while (1) {
 
@@ -227,9 +243,12 @@ int main()
 	if (430-c3*3 <= 0) {
 		c3 = 0;
 	}
+    
+    drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
 
-    	bresenham(350-c,450-c,360-c,460-c,fbp,vinfo,finfo);
-    	bresenham(450+c,450-c,440+c,460-c,fbp,vinfo,finfo);
+
+    bresenham(350-c,450-c,360-c,460-c,fbp,vinfo,finfo);
+    bresenham(450+c,450-c,440+c,460-c,fbp,vinfo,finfo);
 
 	bresenham(370-c2,430-c2*2,360-c2,410-c2*2,fbp,vinfo,finfo);
 	bresenham(430+c2,430-c2*2,440+c2,410-c2*2,fbp,vinfo,finfo);
@@ -238,6 +257,7 @@ int main()
 
 	circleBres(400,500,50,fbp,vinfo,finfo);
 	c++; c2++; c3++;
+    r=r+1;
 	delay(10000);
     }
 
