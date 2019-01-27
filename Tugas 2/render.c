@@ -191,6 +191,34 @@ void drawPlane(int x0, int y0, int x1, int y1, char * fbp, struct fb_var_screeni
     bresenham(x0-10,y0+25,x1-80,y1-15,fbp,vinfo,finfo);//ekor
 }
 
+void drawBlast(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    bresenham(x0,y0,x0-8,y0 + 30,fbp,vinfo,finfo); //Atas
+    bresenham(x0,y0,x0+8,y0 + 30,fbp,vinfo,finfo);
+
+    bresenham(x0-8,y0 + 30,x0-35,y0+12,fbp,vinfo,finfo); //Barat Laut
+    bresenham(x0-21,y0 + 43,x0-35,y0+12,fbp,vinfo,finfo);
+
+	bresenham(x0-21,y0 + 43,x0-51,y0 + 51,fbp,vinfo,finfo); //Barat
+    bresenham(x0-21,y0 + 59,x0-51,y0 + 51,fbp,vinfo,finfo);
+
+    bresenham(x0-21,y0 + 59,x0-35,y0+88,fbp,vinfo,finfo); //Barat Daya
+    bresenham(x0-8,y0 + 72,x0-35,y0+88,fbp,vinfo,finfo);
+
+    bresenham(x0-8,y0 + 72,x0,y0 + 102,fbp,vinfo,finfo); //Selatan
+    bresenham(x0+8,y0 + 72,x0,y0 + 102,fbp,vinfo,finfo);
+
+    bresenham(x0+8,y0 + 30,x0+35,y0+12,fbp,vinfo,finfo); //Timur Laut
+    bresenham(x0+21,y0 + 43,x0+35,y0+12,fbp,vinfo,finfo);
+
+	bresenham(x0+21,y0 + 43,x0+51,y0 + 51,fbp,vinfo,finfo); //Timur
+    bresenham(x0+21,y0 + 59,x0+51,y0 + 51,fbp,vinfo,finfo);
+
+    bresenham(x0+8,y0 + 72,x0+35,y0+88,fbp,vinfo,finfo); //Tenggara
+    bresenham(x0+21,y0 + 59,x0+35,y0+88,fbp,vinfo,finfo);
+
+
+}
+
 int main()
 {
     int fbfd;
@@ -232,33 +260,34 @@ int main()
 
     while (1) {
 
-	clear_screen(fbp,800,600,vinfo,finfo);
+		clear_screen(fbp,800,600,vinfo,finfo);
 
-	if (350-c <= 0) {
-		c = 0;
-	}
-	if (410-c2*2 <= 0) {
-		c2 = 0;
-	}
-	if (430-c3*3 <= 0) {
-		c3 = 0;
-	}
-    
-    drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
+		if (350-c <= 0) {
+			c = 0;
+		}
+		if (410-c2*2 <= 0) {
+			c2 = 0;
+		}
+		if (430-c3*3 <= 0) {
+			c3 = 0;
+		}
+		
+		drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
+		drawBlast(200+r,100,fbp,vinfo,finfo);
 
 
-    bresenham(350-c,450-c,360-c,460-c,fbp,vinfo,finfo);
-    bresenham(450+c,450-c,440+c,460-c,fbp,vinfo,finfo);
+		bresenham(350-c,450-c,360-c,460-c,fbp,vinfo,finfo);
+		bresenham(450+c,450-c,440+c,460-c,fbp,vinfo,finfo);
 
-	bresenham(370-c2,430-c2*2,360-c2,410-c2*2,fbp,vinfo,finfo);
-	bresenham(430+c2,430-c2*2,440+c2,410-c2*2,fbp,vinfo,finfo);
+		bresenham(370-c2,430-c2*2,360-c2,410-c2*2,fbp,vinfo,finfo);
+		bresenham(430+c2,430-c2*2,440+c2,410-c2*2,fbp,vinfo,finfo);
 
-	bresenham(400+c3,460-c3*3,410+c3,430-c3*3,fbp,vinfo,finfo);
+		bresenham(400+c3,460-c3*3,410+c3,430-c3*3,fbp,vinfo,finfo);
 
-	circleBres(400,500,50,fbp,vinfo,finfo);
-	c++; c2++; c3++;
-    r=r+1;
-	delay(10000);
+		circleBres(400,500,50,fbp,vinfo,finfo);
+		c++; c2++; c3++;
+		r=r+1;
+		delay(10000);
     }
 
     munmap(fbp, screensize);
