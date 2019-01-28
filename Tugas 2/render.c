@@ -6,7 +6,9 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include <time.h>
+#include <math.h>
 #include "utilities.h"
+
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
 
@@ -164,23 +166,27 @@ int main()
 		drawBlast(200+r,100,fbp,vinfo,finfo);
 
 
-		bresenham(350-c,450-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
-		bresenham(450+c,450-c,440+c,460-c,TRUE,fbp,vinfo,finfo);
+		//bresenham(350-c,450-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
+		//bresenham(450+c,450-c,440+c,460-c,TRUE,fbp,vinfo,finfo);
 
 		bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
-		bresenham(430+c2,430-c2*2,440+c2,410-c2*2,TRUE,fbp,vinfo,finfo);
+		//bresenham(430+c2,430-c2*2,440+c2,410-c2*2,TRUE,fbp,vinfo,finfo);
 
-		bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
+		//bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
 
 		circleBres(400,500,50,fbp,vinfo,finfo);
 		c++; c2++; c3++;
 		r=r+1;
 		delay(10000);
+
+        //NOTE: Belom semua sisi pesawat di cek
+        if (checkIfIntersect(370-c2,430-c2*2,360-c2,410-c2*2,40+r+25,100+26,90+r,100+26))
+            break;
     }
 
     munmap(fbp, screensize);
     close(fbfd);
-
+    while(1);
     return 0;
 }
 
