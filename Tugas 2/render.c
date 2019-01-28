@@ -107,6 +107,14 @@ void drawBlast(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struc
 
 }
 
+void drawStar(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    bresenham(x0-8,y0-8,x0,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+5,y0-10,x0,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+11,y0,x0,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+5,y0+10,x0,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0-10,y0+6,x0,y0,TRUE,fbp,vinfo,finfo);
+}
+
 int main()
 {
     int fbfd;
@@ -162,16 +170,12 @@ int main()
 		
 		drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
 		drawBlast(200+r,100,fbp,vinfo,finfo);
-
-
-		bresenham(350-c,450-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
-		bresenham(450+c,450-c,440+c,460-c,TRUE,fbp,vinfo,finfo);
-
-		bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
-		bresenham(430+c2,430-c2*2,440+c2,410-c2*2,TRUE,fbp,vinfo,finfo);
-
-		bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
-
+        drawStar(350-c,450-c,fbp,vinfo,finfo);
+        drawStar(450+c,450-c,fbp,vinfo,finfo);
+        drawStar(370-c2,430-c2*2,fbp,vinfo,finfo);
+        drawStar(430+c2,430-c2*2,fbp,vinfo,finfo);
+        drawStar(400-c3/5,460-c3*3,fbp,vinfo,finfo);
+        
 		circleBres(400,500,50,fbp,vinfo,finfo);
 		c++; c2++; c3++;
 		r=r+1;
