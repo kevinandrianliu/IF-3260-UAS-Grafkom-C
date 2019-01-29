@@ -112,11 +112,16 @@ void drawCannon(char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screen
     bresenham(335,445,345,435,0,fbp,vinfo,finfo);
     
     //bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
-    bresenham(322,502,326,506,0,fbp,vinfo,finfo);
+    //bresenham(355,455,363,473,0,fbp,vinfo,finfo);
+    bresenham(355,420,372,455,0,fbp,vinfo,finfo);
+    bresenham(355,420,371,415,0,fbp,vinfo,finfo);
+    bresenham(370,415,387,453,0,fbp,vinfo,finfo);
+    //bresenham(355,455,363,475,0,fbp,vinfo,finfo);
     //bresenham(375,445,367,437,0,fbp,vinfo,finfo);
     //bresenham(375,425,365,435,0,fbp,vinfo,finfo);
 
     //bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
+ 
     /*bresenham(395,465,403,433,0,fbp,vinfo,finfo);
     bresenham(405,455,417,427,0,fbp,vinfo,finfo);
     bresenham(405,455,395,465,0,fbp,vinfo,finfo);*/
@@ -147,8 +152,10 @@ void drawBullets(int offset, char selection, char * framebuffer, struct fb_var_s
 			drawStar(350-offset,450-offset,framebuffer,vinfo,finfo);
 			break;
 		case 1:
+			drawStar(450+offset,450-offset,framebuffer,vinfo,finfo);
 			break;
 		case 2:
+			drawStar(370-offset,430-offset,framebuffer,vinfo,finfo);
 			break;
 		case 3:
 			break;
@@ -205,7 +212,7 @@ int main()
 
     while (1) {
 
-		//clear_screen(fbp,800,600,vinfo,finfo);
+		clear_screen(fbp,800,600,vinfo,finfo);
 
 		if (350-c <= 0) {
 			c = 0;
@@ -220,23 +227,26 @@ int main()
 		drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
 		drawBlast(200+r,100,fbp,vinfo,finfo);
 
-		//bresenham(350-c,450-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
+		bresenham(350-c,450-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
 		//bresenham(450+c,450-c,440+c,460-c,TRUE,fbp,vinfo,finfo);
 
-		//bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
+		bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
 		//bresenham(430+c2,430-c2*2,440+c2,410-c2*2,TRUE,fbp,vinfo,finfo);
 
 		//bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
 
 		drawCannon(fbp,vinfo,finfo);
 		drawBullets(c,0,fbp,vinfo,finfo);
+
+		if(450-c == 100 && (40+r)%800 == 350-c){
+			drawBlast((60+r)%800,100,fbp,vinfo,finfo);}
 		c++; c2++; c3++;
 		r=r+1;
 		delay(10000);
 
         //NOTE: Belom semua sisi pesawat di cek
-        if (checkIfIntersect(370-c2,430-c2*2,360-c2,410-c2*2,40+r+25,100+26,90+r,100+26))
-            break;
+        if (checkIfIntersect(350-c,450-c,360-c,460-c,40+r+25,100+26,90+r,100+26)){
+            break;}
     }
 
     munmap(fbp, screensize);
