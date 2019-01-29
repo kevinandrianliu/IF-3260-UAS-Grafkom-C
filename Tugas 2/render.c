@@ -6,7 +6,9 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include <time.h>
+#include <math.h>
 #include "utilities.h"
+
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
 
@@ -130,6 +132,14 @@ void drawCannon(char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screen
     halfcircleBres(400,530,80,fbp,vinfo,finfo);
 }
 
+void drawStar(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    bresenham(x0-8,y0-8,x0,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+5,y0-10,x0,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+11,y0,x0,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+5,y0+10,x0,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0-10,y0+6,x0,y0,TRUE,fbp,vinfo,finfo);
+}
+
 int main()
 {
     int fbfd;
@@ -186,7 +196,6 @@ int main()
 		drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
 		drawBlast(200+r,100,fbp,vinfo,finfo);
 
-
 		bresenham(350-c,450-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
 		bresenham(450+c,450-c,440+c,460-c,TRUE,fbp,vinfo,finfo);
 
@@ -195,15 +204,29 @@ int main()
 
 		bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
 
+<<<<<<< HEAD
 		drawCannon(fbp,vinfo,finfo);
+=======
+        drawStar(350-c,450-c,fbp,vinfo,finfo);
+        drawStar(450+c,450-c,fbp,vinfo,finfo);
+        drawStar(370-c2,430-c2*2,fbp,vinfo,finfo);
+        drawStar(430+c2,430-c2*2,fbp,vinfo,finfo);
+        drawStar(400-c3/5,460-c3*3,fbp,vinfo,finfo);
+        
+		circleBres(400,500,50,fbp,vinfo,finfo);
+>>>>>>> 37472fb34c933e1356a95cf3c992d3df1c727132
 		c++; c2++; c3++;
 		r=r+1;
 		delay(10000);
+
+        //NOTE: Belom semua sisi pesawat di cek
+        if (checkIfIntersect(370-c2,430-c2*2,360-c2,410-c2*2,40+r+25,100+26,90+r,100+26))
+            break;
     }
 
     munmap(fbp, screensize);
     close(fbfd);
-
+    while(1);
     return 0;
 }
 
