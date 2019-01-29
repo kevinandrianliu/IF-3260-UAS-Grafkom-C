@@ -222,19 +222,61 @@ char checkIfShot(int star_offset, int plane_offset, int selection){
             break;
     }
 
-    int x_star_coordinates[5] = {x_star-8, x_star+5,  x_star+11, x_star+5,  x_star-10};
-    int y_star_coordinates[5] = {y_star-8, y_star-10, y_star,    y_star+10, y_star+6};
+    int x_min_star_box = min(x_star-8, min(x_star+5,  min(x_star+11, min(x_star+5,  x_star-10))));
+    int y_min_star_box = min(y_star-8, min(y_star-10, min(y_star,    min(y_star+10, y_star+6))));
+    int x_max_star_box = max(x_star-8, max(x_star+5,  max(x_star+11, max(x_star+5,  x_star-10))));
+    int y_max_star_box = max(y_star-8, max(y_star-10, max(y_star,    max(y_star+10, y_star+6))));
+    
+    int x0_plane_coordinates[6] = {
+        40+plane_offset-9,
+        40+plane_offset+25,
+        40+plane_offset+50,
+        40+plane_offset+9,
+        40+plane_offset+40,
+        40+plane_offset-10
+    };
+    int y0_plane_coordinates[6] = {
+        100+26,
+        100+26,
+        100+26,
+        100+15,
+        100+15,
+        100+25
+    };
+    int x1_plane_coordinates[6] = {
+        90+plane_offset-47,
+        90+plane_offset,
+        90+plane_offset+25,
+        90+plane_offset-50,
+        90+plane_offset-50,
+        90+plane_offset-80
+    };
+    int y1_plane_coordinates[6] = {
+        100+26,
+        100+26,
+        100+13,
+        100+41,
+        100+41,
+        100-15
+    };
+    for (int i = 0; i < 6; i++){
+        if (checkIfIntersect(x_min_star_box,y_min_star_box,x_min_star_box,y_max_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
+        return TRUE;
+        if (checkIfIntersect(x_min_star_box,y_max_star_box,x_max_star_box,y_max_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
+            return TRUE;
+        if (checkIfIntersect(x_max_star_box,y_max_star_box,x_max_star_box,y_min_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
+            return TRUE;
+        if (checkIfIntersect(x_max_star_box,y_min_star_box,x_min_star_box,y_min_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
+            return TRUE;
+    }
+
+    return FALSE;
 
     // for (int i = 0; i < 5; i++){
     //     if (checkIfIntersect(x_star_coordinates[i],y_star_coordinates[i],x_star,y_star,))
     //         return TRUE
 
     //     plane_offset-9,
-    //     drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
-    //     bresenham(x0-9 ,y0+26,x1-47,y1+26,0,fbp,vinfo,finfo);//lurus bawah
-    //     bresenham(x0+25,y0+26,x1   ,y1+26,0,fbp,vinfo,finfo);//lurus bawah
-    //     bresenham(x0+10,y0+15,x1-10,y1+15,0,fbp,vinfo,finfo);//tambahan bawah
-
     // }
 }
 int main()
@@ -296,20 +338,19 @@ int main()
             bullet_selection = 0;
         }
         
-        drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
-        drawBlast(200+r,100,fbp,vinfo,finfo);
-        
         drawCannon(fbp,vinfo,finfo);
 
-        //draw bullet jika telah menembak
-        if (flagShoot){
-            drawBullets(c,bullet_selection-2,fbp,vinfo,finfo);
-            c++;
+        if(checkIfShot(c,r,bullet_selection-2)){
+            drawBlast((60+r),100,fbp,vinfo,finfo);
+            break;
+        } else {
+            //draw bullet jika telah menembak
+            if (flagShoot){
+                drawBullets(c,bullet_selection-2,fbp,vinfo,finfo);
+                c++;
+            }
+            drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
         }
-
-        // if(450-c == 100 && (40+r)%800 == 350-c){
-        //     drawBlast((60+r)%800,100,fbp,vinfo,finfo);
-        // }
         r=r+1;
         delay(10000);
 
