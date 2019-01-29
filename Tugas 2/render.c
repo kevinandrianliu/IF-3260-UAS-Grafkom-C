@@ -116,12 +116,6 @@ void drawCannon(char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screen
     bresenham(337,430,352,468,0,fbp,vinfo,finfo);
     
     
-    //bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
-    //bresenham(355,455,363,473,0,fbp,vinfo,finfo);
-    /*bresenham(355,420,372,455,0,fbp,vinfo,finfo);
-    bresenham(355,420,371,415,0,fbp,vinfo,finfo);
-    bresenham(370,415,387,453,0,fbp,vinfo,finfo);*/
-
     bresenham(392,415,392,450,0,fbp,vinfo,finfo);
     bresenham(392,415,407,415,0,fbp,vinfo,finfo);
     bresenham(407,415,407,450,0,fbp,vinfo,finfo);
@@ -151,10 +145,10 @@ void drawStar(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct
 void drawBullets(int offset, char selection, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
 	switch (selection){
 		case 0:
-			drawStar(350-offset,450-offset,framebuffer,vinfo,finfo);
+			drawStar(302-offset,456-offset,framebuffer,vinfo,finfo);
 			break;
 		case 1:
-			drawStar(450+offset,450-offset,framebuffer,vinfo,finfo);
+			drawStar(344+offset,427-offset,framebuffer,vinfo,finfo);
 			break;
 		case 2:
 			drawStar(370-offset,430-offset,framebuffer,vinfo,finfo);
@@ -229,16 +223,21 @@ int main()
 		drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
 		drawBlast(200+r,100,fbp,vinfo,finfo);
 
-		bresenham(350-c,450-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
+		//bresenham(350-c,450-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
 		//bresenham(450+c,450-c,440+c,460-c,TRUE,fbp,vinfo,finfo);
 
-		bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
+		//bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
 		//bresenham(430+c2,430-c2*2,440+c2,410-c2*2,TRUE,fbp,vinfo,finfo);
 
-		bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
-
+		//bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
+        drawStar(302-c,456-c,fbp,vinfo,finfo);
+        drawStar(344-c/2,427-c,fbp,vinfo,finfo);
+        drawStar(400,415-c,fbp,vinfo,finfo);
+        drawStar(455+c/2,427-c,fbp,vinfo,finfo);
+        drawStar(498+c,460-c,fbp,vinfo,finfo);
 		drawCannon(fbp,vinfo,finfo);
-		drawBullets(c,0,fbp,vinfo,finfo);
+		//drawBullets(c,0,fbp,vinfo,finfo);
+        //drawBullets(-c,0,fbp,vinfo,finfo);
 
 		if(450-c == 100 && (40+r)%800 == 350-c){
 			drawBlast((60+r)%800,100,fbp,vinfo,finfo);}
