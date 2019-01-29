@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include "utilities.h"
 #include "lineutil.h"
+#include "name.h"
 
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
@@ -94,6 +95,35 @@ int main()
     
     //start user input thread
     pthread_create(&thread0, NULL, userInput, NULL);
+
+    clear_screen(fbp,800,600,vinfo,finfo);
+
+    int y = 600;
+    for (;;){
+        clear_screen(fbp,800,600,vinfo,finfo);
+        if ((y>=0) && (y<600))
+            nama(y,fbp, vinfo, finfo);
+        if ((y+50>=0) && (y+50<600))
+            bella(y+50, fbp, vinfo, finfo);
+        if ((y+100>=0) && (y+100<600))
+            yora(y+100,fbp,vinfo, finfo);
+        if ((y+150>=0) && (y+150<600))
+            kevin_a(y+150, fbp, vinfo, finfo);
+        if ((y+200>=0) && (y+200<600))
+            kevin_f(y+200, fbp, vinfo, finfo);
+        if ((y+250>=0) && (y+250<600))
+            tere(y+250, fbp, vinfo, finfo);
+        if ((y+300>=0) && (y+300<600))
+            fildah(y+300, fbp, vinfo, finfo);
+        if ((y+350>=0) && (y+350<600))
+            richard(y+350, fbp, vinfo, finfo);
+
+        y -= 3;
+        delay(50000);
+
+        if (y < -400)
+            break;
+    }
 
     while (1) {
         clear_screen(fbp,800,600,vinfo,finfo);
