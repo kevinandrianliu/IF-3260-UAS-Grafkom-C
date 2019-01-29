@@ -1,20 +1,13 @@
 #ifndef __UTILITIES_H__
 #define __UTILITIES_H__
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
 #include <linux/fb.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
 
 #define TRUE 0x01
 #define FALSE 0x00
 #define max(a,b) (a > b ? a : b)
 #define min(a,b) (a <= b ? a : b)
 
-// Tugas 1
 void render_a(int x, int y, int b, int g, int r, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
 void render_b(int x, int y, int b, int g, int r, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
 void render_c(int x, int y, int b, int g, int r, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
@@ -42,8 +35,4 @@ void render_kotak(int x, int y, int b, int g, int r, char *fbp, struct fb_var_sc
 void render_strip(int x, int y, int b, int g, int r, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
 void pixel_color(char *fbp, long int location, int b, int g, int r);
 void clear_screen(char * framebuffer, unsigned int x_size, unsigned int y_size, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
-
-// Tugas 2
-void bresenham(int x0, int y0, int x1, int y1, char colorful, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
-char checkIfIntersect(int x01, int y01, int x02, int y02, int x11, int y11, int x12, int y12);
 #endif

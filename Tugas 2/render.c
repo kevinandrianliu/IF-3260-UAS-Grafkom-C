@@ -1,17 +1,15 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <linux/input.h>
-#include <linux/fb.h>
+#include <pthread.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
-#include <time.h>
-#include <math.h>
-#include <string.h>
-#include <pthread.h>
+#include <unistd.h>
 #include "utilities.h"
+#include "lineutil.h"
 
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
@@ -26,152 +24,6 @@ unsigned short bullet_selection;
 void delay(unsigned int ms){
     clock_t goal = ms + clock();
     while (goal > clock());
-}
-
-
-void putpixel(int x, int y, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-    long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
-    *(framebuffer + mem_location) = 255;
-    *(framebuffer + mem_location + 1) = 255;
-    *(framebuffer + mem_location + 2) = 255;
-    *(framebuffer + mem_location + 3) = 0; 
-}
-
-// Function to put pixels 
-// at subsequence points 
-void drawCircle(int xc, int yc, int x, int y, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) 
-{ 
-    putpixel(xc+x, yc-y, framebuffer, vinfo, finfo); 
-    putpixel(xc-x, yc-y, framebuffer, vinfo, finfo); 
-    putpixel(xc+y, yc-x, framebuffer, vinfo, finfo); 
-    putpixel(xc-y, yc-x, framebuffer, vinfo, finfo);
-}
-  
-// Function for circle-generation 
-// using Bresenham's algorithm 
-void halfcircleBres(int xc, int yc, int r, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) 
-{ 
-    int x = 0, y = r; 
-    int d = 3 - 2 * r; 
-    drawCircle(xc, yc, x, y, framebuffer, vinfo, finfo); 
-    while (y >= x) 
-    { 
-        // for each pixel we will 
-        // draw all eight pixels 
-          
-        x++; 
-  
-        // check for decision parameter 
-        // and correspondingly  
-        // update d, x, y 
-        if (d > 0) 
-        { 
-            y--;  
-            d = d + 4 * (x - y) + 10; 
-        } 
-        else {d = d + 4 * x + 6;} 
-        drawCircle(xc, yc, x, y, framebuffer, vinfo, finfo); 
-    }
-}
-
-void drawPlane(int x0, int y0, int x1, int y1, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-    bresenham(x0,y0,x1,y1,0,fbp,vinfo,finfo);//lurus atas
-    bresenham(x0-9 ,y0+26,x1-47,y1+26,0,fbp,vinfo,finfo);//lurus bawah
-    bresenham(x0+25,y0+26,x1   ,y1+26,0,fbp,vinfo,finfo);//lurus bawah
-    bresenham(x0+52,y0+11,x1+23,y1+11,0,fbp,vinfo,finfo);//lurus tengah
-    bresenham(x0+52,y0+11,x1-15,y1   ,0,fbp,vinfo,finfo);//runcing
-    bresenham(x0+50,y0+26,x1+25,y1+13,0,fbp,vinfo,finfo);//runcing
-    bresenham(x0+50,y0   ,x1+25,y1+13,0,fbp,vinfo,finfo);//runcing
-    bresenham(x0+10,y0+15,x1-10,y1+15,0,fbp,vinfo,finfo);//tambahan bawah
-    bresenham(x0+9,y0+15,x1-50,y1+41,0,fbp,vinfo,finfo);//sayap
-    bresenham(x0+40,y0+15,x1-50,y1+41,0,fbp,vinfo,finfo);//sayap
-    bresenham(x0   ,y0   ,x1-80,y1-15,0,fbp,vinfo,finfo);//ekor
-    bresenham(x0-10,y0+25,x1-80,y1-15,0,fbp,vinfo,finfo);//ekor
-}
-
-void drawBlast(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-    bresenham(x0,y0,x0-8,y0 + 30,0,fbp,vinfo,finfo); //Atas
-    bresenham(x0,y0,x0+8,y0 + 30,0,fbp,vinfo,finfo);
-
-    bresenham(x0-8,y0 + 30,x0-35,y0+12,0,fbp,vinfo,finfo); //Barat Laut
-    bresenham(x0-21,y0 + 43,x0-35,y0+12,0,fbp,vinfo,finfo);
-
-    bresenham(x0-21,y0 + 43,x0-51,y0 + 51,0,fbp,vinfo,finfo); //Barat
-    bresenham(x0-21,y0 + 59,x0-51,y0 + 51,0,fbp,vinfo,finfo);
-
-    bresenham(x0-21,y0 + 59,x0-35,y0+88,0,fbp,vinfo,finfo); //Barat Daya
-    bresenham(x0-8,y0 + 72,x0-35,y0+88,0,fbp,vinfo,finfo);
-
-    bresenham(x0-8,y0 + 72,x0,y0 + 102,0,fbp,vinfo,finfo); //Selatan
-    bresenham(x0+8,y0 + 72,x0,y0 + 102,0,fbp,vinfo,finfo);
-
-    bresenham(x0+8,y0 + 30,x0+35,y0+12,0,fbp,vinfo,finfo); //Timur Laut
-    bresenham(x0+21,y0 + 43,x0+35,y0+12,0,fbp,vinfo,finfo);
-
-    bresenham(x0+21,y0 + 43,x0+51,y0 + 51,0,fbp,vinfo,finfo); //Timur
-    bresenham(x0+21,y0 + 59,x0+51,y0 + 51,0,fbp,vinfo,finfo);
-
-    bresenham(x0+8,y0 + 72,x0+35,y0+88,0,fbp,vinfo,finfo); //Tenggara
-    bresenham(x0+21,y0 + 59,x0+35,y0+88,0,fbp,vinfo,finfo);
-
-
-}
-void drawCannon(char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-    //bresenham(340-c,440-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
-    bresenham(307,450,335,495,0,fbp,vinfo,finfo);
-    bresenham(298,462,307,450,0,fbp,vinfo,finfo);
-    bresenham(298,462,327,510,0,fbp,vinfo,finfo);
-
-    bresenham(352,424,365,460,0,fbp,vinfo,finfo);
-    bresenham(337,430,352,424,0,fbp,vinfo,finfo);
-    bresenham(337,430,352,468,0,fbp,vinfo,finfo);
-    
-    
-    bresenham(392,415,392,450,0,fbp,vinfo,finfo);
-    bresenham(392,415,407,415,0,fbp,vinfo,finfo);
-    bresenham(407,415,407,450,0,fbp,vinfo,finfo);
-
-    bresenham(448,424,435,460,0,fbp,vinfo,finfo);
-    bresenham(463,430,448,424,0,fbp,vinfo,finfo);
-    bresenham(463,430,448,468,0,fbp,vinfo,finfo);
-
-    bresenham(493,450,465,479,0,fbp,vinfo,finfo);
-    bresenham(503,469,493,450,0,fbp,vinfo,finfo);
-    bresenham(502,462,473,493,0,fbp,vinfo,finfo);
-
-
-    halfcircleBres(400,530,80,fbp,vinfo,finfo);
-    bresenham(320,530,480,530,0,fbp,vinfo,finfo);
-
-}
-
-void drawStar(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-    bresenham(x0-8,y0-8,x0,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+5,y0-10,x0,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+11,y0,x0,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+5,y0+10,x0,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0-10,y0+6,x0,y0,TRUE,fbp,vinfo,finfo);
-}
-
-void drawBullets(int offset, char selection, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-    switch (selection){
-        case 0:
-            drawStar(302-offset/1.5,456-offset,fbp,vinfo,finfo);
-            break;
-        case 1:
-            drawStar(344-offset/2,427-offset,fbp,vinfo,finfo);
-            break;
-        case 2:
-            drawStar(400,415-offset,fbp,vinfo,finfo);
-            break;
-        case 3:
-            drawStar(455+offset/2,427-offset,fbp,vinfo,finfo);
-            break;
-        case 4:
-            drawStar(498+offset/1.5,460-offset,fbp,vinfo,finfo);
-            break;
-    }
-
 }
 
 void *userInput(){
@@ -195,90 +47,6 @@ void *userInput(){
     }
 }
 
-char checkIfShot(int star_offset, int plane_offset, int selection){
-    int x_star;
-    int y_star;
-
-    switch (selection){
-        case 0:
-            x_star = 302-star_offset/1.5;
-            y_star = 456-star_offset;
-            break;
-        case 1:
-            x_star = 344-star_offset/2;
-            y_star = 427-star_offset;
-            break;
-        case 2:
-            x_star = 400;
-            y_star = 415-star_offset;
-            break;
-        case 3:
-            x_star = 455+star_offset/2;
-            y_star = 427-star_offset;
-            break;
-        case 4:
-            x_star = 498+star_offset/1.5;
-            y_star = 460-star_offset;
-            break;
-    }
-
-    int x_min_star_box = min(x_star-8, min(x_star+5,  min(x_star+11, min(x_star+5,  x_star-10))));
-    int y_min_star_box = min(y_star-8, min(y_star-10, min(y_star,    min(y_star+10, y_star+6))));
-    int x_max_star_box = max(x_star-8, max(x_star+5,  max(x_star+11, max(x_star+5,  x_star-10))));
-    int y_max_star_box = max(y_star-8, max(y_star-10, max(y_star,    max(y_star+10, y_star+6))));
-    
-    int x0_plane_coordinates[6] = {
-        40+plane_offset-9,
-        40+plane_offset+25,
-        40+plane_offset+50,
-        40+plane_offset+9,
-        40+plane_offset+40,
-        40+plane_offset-10
-    };
-    int y0_plane_coordinates[6] = {
-        100+26,
-        100+26,
-        100+26,
-        100+15,
-        100+15,
-        100+25
-    };
-    int x1_plane_coordinates[6] = {
-        90+plane_offset-47,
-        90+plane_offset,
-        90+plane_offset+25,
-        90+plane_offset-50,
-        90+plane_offset-50,
-        90+plane_offset-80
-    };
-    int y1_plane_coordinates[6] = {
-        100+26,
-        100+26,
-        100+13,
-        100+41,
-        100+41,
-        100-15
-    };
-    for (int i = 0; i < 6; i++){
-        if (checkIfIntersect(x_min_star_box,y_min_star_box,x_min_star_box,y_max_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
-        return TRUE;
-        if (checkIfIntersect(x_min_star_box,y_max_star_box,x_max_star_box,y_max_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
-            return TRUE;
-        if (checkIfIntersect(x_max_star_box,y_max_star_box,x_max_star_box,y_min_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
-            return TRUE;
-        if (checkIfIntersect(x_max_star_box,y_min_star_box,x_min_star_box,y_min_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
-            return TRUE;
-    }
-
-    return FALSE;
-
-    // for (int i = 0; i < 5; i++){
-    //     if (checkIfIntersect(x_star_coordinates[i],y_star_coordinates[i],x_star,y_star,))
-    //         return TRUE
-
-    //     plane_offset-9,
-    // }
-}
 int main()
 {
     int fbfd;
@@ -322,8 +90,6 @@ int main()
     }
 
     int c = 0;
-    int c2 = 0; 
-    int c3 = 0;
     int r = 0;
     
     //start user input thread
