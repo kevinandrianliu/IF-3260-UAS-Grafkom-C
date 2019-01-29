@@ -2,15 +2,25 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <linux/input.h>
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include <time.h>
 #include <math.h>
+#include <string.h>
+#include <pthread.h>
 #include "utilities.h"
 
 #define CHARWIDTH 16
 #define CHARHEIGHT 20
+
+struct input_event ev;
+ssize_t n;
+int fd;
+pthread_t thread0;
+int flagShoot = 0;
 
 void delay(unsigned int ms){
     clock_t goal = ms + clock();
@@ -163,6 +173,32 @@ void drawBullets(int offset, char selection, char * fbp, struct fb_var_screeninf
 
 }
 
+void *userInput(){
+    while(1){
+        n = read(fd, &ev, sizeof ev);
+        if (n == (ssize_t)-1) {
+            if (errno == EINTR)
+                continue;
+            else
+                break;
+        } else
+        if (n != sizeof ev) {
+            errno = EIO;
+            break;
+        }
+           if (ev.type == EV_KEY && ev.value >= 0 && ev.value <= 2){
+             
+             if(ev.value == 0){
+                
+             }
+             if(ev.value == 1){
+                //menembak
+                flagShoot = 1;
+             }
+           }
+    }
+}
+
 
 int main()
 {
@@ -198,17 +234,28 @@ int main()
         exit(4);
     }
 
+    //input keyboard
+    const char *dev = "/dev/input/event4";
+    fd = open(dev, O_RDONLY);
+    if (fd == -1) {
+        fprintf(stderr, "Cannot open %s: %s.\n", dev, strerror(errno));
+        return EXIT_FAILURE;
+    }
+
     int c = 0;
     int c2 = 0; 
     int c3 = 0;
     int r = 0;
+    
+    //start user input thread
+    pthread_create(&thread0, NULL, userInput, NULL);
 
     while (1) {
-
 		clear_screen(fbp,800,600,vinfo,finfo);
 
 		if (350-c <= 0) {
 			c = 0;
+            flagShoot = 0;
 		}
 		if (410-c2*2 <= 0) {
 			c2 = 0;
@@ -221,15 +268,22 @@ int main()
 		drawBlast(200+r,100,fbp,vinfo,finfo);
         
 		drawCannon(fbp,vinfo,finfo);
-		drawBullets(c,0,fbp,vinfo,finfo);
-        drawBullets(c,1,fbp,vinfo,finfo);
-        drawBullets(c,2,fbp,vinfo,finfo);
-        drawBullets(c,3,fbp,vinfo,finfo);
-        drawBullets(c,4,fbp,vinfo,finfo);
+
+        //draw bullet jika telah menembak
+		if (flagShoot==1){
+            drawBullets(c,0,fbp,vinfo,finfo);
+            drawBullets(c,1,fbp,vinfo,finfo);
+            drawBullets(c,2,fbp,vinfo,finfo);
+            drawBullets(c,3,fbp,vinfo,finfo);
+            drawBullets(c,4,fbp,vinfo,finfo);
+            c++;
+        }
 
 		if(450-c == 100 && (40+r)%800 == 350-c){
-			drawBlast((60+r)%800,100,fbp,vinfo,finfo);}
-		c++; c2++; c3++;
+			drawBlast((60+r)%800,100,fbp,vinfo,finfo);
+        }
+		//c++; 
+        c2++; c3++;
 		r=r+1;
 		delay(10000);
 
@@ -240,7 +294,11 @@ int main()
 
     munmap(fbp, screensize);
     close(fbfd);
+
     while(1);
+
+    fflush(stdout);
+    fprintf(stderr, "%s.\n", strerror(errno));
     return 0;
 }
 
