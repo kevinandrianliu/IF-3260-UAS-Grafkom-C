@@ -17,6 +17,7 @@ void delay(unsigned int ms){
     while (goal > clock());
 }
 
+
 void putpixel(int x, int y, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
     long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
     *(framebuffer + mem_location) = 255;
@@ -140,6 +141,29 @@ void drawStar(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct
     bresenham(x0-10,y0+6,x0,y0,TRUE,fbp,vinfo,finfo);
 }
 
+void drawBullets(int offset, char selection, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+	switch (selection){
+		case 0:
+			drawStar(350-offset,450-offset,framebuffer,vinfo,finfo);
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+	}
+
+		//drawStar(350-c,450-c,fbp,vinfo,finfo);
+        //drawStar(450+c,450-c,fbp,vinfo,finfo);
+        //drawStar(370-c2,430-c2*2,fbp,vinfo,finfo);
+        //drawStar(430+c2,430-c2*2,fbp,vinfo,finfo);
+        //drawStar(400-c3/5,460-c3*3,fbp,vinfo,finfo);
+}
+
+
 int main()
 {
     int fbfd;
@@ -181,7 +205,7 @@ int main()
 
     while (1) {
 
-		clear_screen(fbp,800,600,vinfo,finfo);
+		//clear_screen(fbp,800,600,vinfo,finfo);
 
 		if (350-c <= 0) {
 			c = 0;
@@ -196,25 +220,16 @@ int main()
 		drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
 		drawBlast(200+r,100,fbp,vinfo,finfo);
 
-		bresenham(350-c,450-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
-		bresenham(450+c,450-c,440+c,460-c,TRUE,fbp,vinfo,finfo);
+		//bresenham(350-c,450-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
+		//bresenham(450+c,450-c,440+c,460-c,TRUE,fbp,vinfo,finfo);
 
-		bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
-		bresenham(430+c2,430-c2*2,440+c2,410-c2*2,TRUE,fbp,vinfo,finfo);
+		//bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
+		//bresenham(430+c2,430-c2*2,440+c2,410-c2*2,TRUE,fbp,vinfo,finfo);
 
-		bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
+		//bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
 
-<<<<<<< HEAD
 		drawCannon(fbp,vinfo,finfo);
-=======
-        drawStar(350-c,450-c,fbp,vinfo,finfo);
-        drawStar(450+c,450-c,fbp,vinfo,finfo);
-        drawStar(370-c2,430-c2*2,fbp,vinfo,finfo);
-        drawStar(430+c2,430-c2*2,fbp,vinfo,finfo);
-        drawStar(400-c3/5,460-c3*3,fbp,vinfo,finfo);
-        
-		circleBres(400,500,50,fbp,vinfo,finfo);
->>>>>>> 37472fb34c933e1356a95cf3c992d3df1c727132
+		drawBullets(c,0,fbp,vinfo,finfo);
 		c++; c2++; c3++;
 		r=r+1;
 		delay(10000);
