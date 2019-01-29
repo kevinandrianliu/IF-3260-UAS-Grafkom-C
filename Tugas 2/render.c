@@ -27,19 +27,15 @@ void putpixel(int x, int y, char * framebuffer, struct fb_var_screeninfo vinfo, 
 // at subsequence points 
 void drawCircle(int xc, int yc, int x, int y, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) 
 { 
-    putpixel(xc+x, yc+y, framebuffer, vinfo, finfo); 
-    putpixel(xc-x, yc+y, framebuffer, vinfo, finfo); 
     putpixel(xc+x, yc-y, framebuffer, vinfo, finfo); 
     putpixel(xc-x, yc-y, framebuffer, vinfo, finfo); 
-    putpixel(xc+y, yc+x, framebuffer, vinfo, finfo); 
-    putpixel(xc-y, yc+x, framebuffer, vinfo, finfo); 
     putpixel(xc+y, yc-x, framebuffer, vinfo, finfo); 
-    putpixel(xc-y, yc-x, framebuffer, vinfo, finfo); 
+    putpixel(xc-y, yc-x, framebuffer, vinfo, finfo);
 }
   
 // Function for circle-generation 
 // using Bresenham's algorithm 
-void circleBres(int xc, int yc, int r, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) 
+void halfcircleBres(int xc, int yc, int r, char * framebuffer, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo) 
 { 
     int x = 0, y = r; 
     int d = 3 - 2 * r; 
@@ -105,6 +101,33 @@ void drawBlast(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struc
     bresenham(x0+21,y0 + 59,x0+35,y0+88,0,fbp,vinfo,finfo);
 
 
+}
+void drawCannon(char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    //bresenham(340-c,440-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
+    bresenham(335,445,353,463,0,fbp,vinfo,finfo);
+    bresenham(345,435,367,457,0,fbp,vinfo,finfo);
+    bresenham(335,445,345,435,0,fbp,vinfo,finfo);
+    
+    //bresenham(370-c2,430-c2*2,360-c2,410-c2*2,TRUE,fbp,vinfo,finfo);
+    bresenham(322,502,326,506,0,fbp,vinfo,finfo);
+    //bresenham(375,445,367,437,0,fbp,vinfo,finfo);
+    //bresenham(375,425,365,435,0,fbp,vinfo,finfo);
+
+    //bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
+    /*bresenham(395,465,403,433,0,fbp,vinfo,finfo);
+    bresenham(405,455,417,427,0,fbp,vinfo,finfo);
+    bresenham(405,455,395,465,0,fbp,vinfo,finfo);*/
+		
+    //bresenham(430+c2,430-c2*2,440+c2,410-c2*2,TRUE,fbp,vinfo,finfo);
+    /*bresenham(425,435,433,413,0,fbp,vinfo,finfo);
+    bresenham(435,425,447,407,0,fbp,vinfo,finfo);
+    bresenham(425,435,435,425,0,fbp,vinfo,finfo);*/
+
+    //bresenham(450+c,450-c,440+c,460-c,TRUE,fbp,vinfo,finfo);
+    /*bresenham(445,455,433,463,0,fbp,vinfo,finfo);
+    bresenham(455,445,447,457,0,fbp,vinfo,finfo);
+    bresenham(445,455,455,445,0,fbp,vinfo,finfo);*/
+    halfcircleBres(400,530,80,fbp,vinfo,finfo);
 }
 
 int main()
@@ -172,7 +195,7 @@ int main()
 
 		bresenham(400+c3,460-c3*3,410+c3,430-c3*3,TRUE,fbp,vinfo,finfo);
 
-		circleBres(400,500,50,fbp,vinfo,finfo);
+		drawCannon(fbp,vinfo,finfo);
 		c++; c2++; c3++;
 		r=r+1;
 		delay(10000);
