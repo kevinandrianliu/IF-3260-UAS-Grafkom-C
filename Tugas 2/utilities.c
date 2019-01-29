@@ -1103,88 +1103,100 @@ void bresenham(int x0, int y0, int x1, int y1, char colorful, char * framebuffer
         y1 = y_temp;
     }
 
-    float gradien = (y1 - y0)/(x1 - x0);
-    if ((abs(gradien) >= 0) && (abs(gradien) <= 1)){
-        int y = y0;
-        int eps = 0;
+    if ((x1 - x0) == 0){
+        for (int y = y0; y <= y1; y++){
+            long int mem_location = (x1 + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
 
-        if (y1 >= y0){
-            int dx = x1 - x0;
-            int dy = y1 - y0;
-            for (int x = x0; x <= x1; x++){
-                long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
-
-                if (colorful){
-                    pixel_color(framebuffer,mem_location,(x % 255),(y % 255), ((y-x) % 255));
-                } else {
-                    pixel_color(framebuffer,mem_location,255,255,255);
-                }
-
-                eps += dy;
-                if ((eps << 1) >= dx){
-                    y++;
-                    eps -= dx;
-                }
-            }
-        } else {    //y1 < y0
-            int dx = x1 - x0;
-            int dy = y0 - y1;
-            for (int x = x0; x <= x1; x++){
-                long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
-
-                if (colorful){
-                    pixel_color(framebuffer,mem_location,(x % 255),(y % 255), ((y-x) % 255));
-                } else {
-                    pixel_color(framebuffer,mem_location,255,255,255);
-                }
-
-                eps += dy;
-                if ((eps << 1) >= dx){
-                    y--;
-                    eps -= dx;
-                }
+            if (colorful){
+                pixel_color(framebuffer,mem_location,(x1 % 255),(y % 255), ((y-x1) % 255));
+            } else {
+                pixel_color(framebuffer,mem_location,255,255,255);
             }
         }
     } else {
-        int x = x0;
-        int eps = 0;
+        float gradien = (y1 - y0)/(x1 - x0);
+        if ((abs(gradien) >= 0) && (abs(gradien) <= 1)){
+            int y = y0;
+            int eps = 0;
 
-        if (y1 >= y0){
-            int dx = x1 - x0;
-            int dy = y1 - y0;
+            if (y1 >= y0){
+                int dx = x1 - x0;
+                int dy = y1 - y0;
+                for (int x = x0; x <= x1; x++){
+                    long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
 
-            for (int y = y0; y <= y1; y++){
-                long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
+                    if (colorful){
+                        pixel_color(framebuffer,mem_location,(x % 255),(y % 255), ((y-x) % 255));
+                    } else {
+                        pixel_color(framebuffer,mem_location,255,255,255);
+                    }
 
-                if (colorful){
-                    pixel_color(framebuffer,mem_location,(x % 255),(y % 255), ((y-x) % 255));
-                } else {
-                    pixel_color(framebuffer,mem_location,255,255,255);
+                    eps += dy;
+                    if ((eps << 1) >= dx){
+                        y++;
+                        eps -= dx;
+                    }
                 }
+            } else {    //y1 < y0
+                int dx = x1 - x0;
+                int dy = y0 - y1;
+                for (int x = x0; x <= x1; x++){
+                    long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
 
-                eps += dx;
-                if ((eps << 1) >= dy){
-                    x++;
-                    eps -= dy;
+                    if (colorful){
+                        pixel_color(framebuffer,mem_location,(x % 255),(y % 255), ((y-x) % 255));
+                    } else {
+                        pixel_color(framebuffer,mem_location,255,255,255);
+                    }
+
+                    eps += dy;
+                    if ((eps << 1) >= dx){
+                        y--;
+                        eps -= dx;
+                    }
                 }
             }
-        } else {    //y1 < y0
-            int dx = x1 - x0;
-            int dy = y0 - y1;
+        } else {
+            int x = x0;
+            int eps = 0;
 
-            for (int y = y0; y >= y1; y--){
-                long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
+            if (y1 >= y0){
+                int dx = x1 - x0;
+                int dy = y1 - y0;
 
-                if (colorful){
-                    pixel_color(framebuffer,mem_location,(x % 255),(y % 255), ((y-x) % 255));
-                } else {
-                    pixel_color(framebuffer,mem_location,255,255,255);
+                for (int y = y0; y <= y1; y++){
+                    long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
+
+                    if (colorful){
+                        pixel_color(framebuffer,mem_location,(x % 255),(y % 255), ((y-x) % 255));
+                    } else {
+                        pixel_color(framebuffer,mem_location,255,255,255);
+                    }
+
+                    eps += dx;
+                    if ((eps << 1) >= dy){
+                        x++;
+                        eps -= dy;
+                    }
                 }
+            } else {    //y1 < y0
+                int dx = x1 - x0;
+                int dy = y0 - y1;
 
-                eps += dx;
-                if ((eps << 1) >= dy){
-                    x++;
-                    eps -= dy;
+                for (int y = y0; y >= y1; y--){
+                    long int mem_location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + vinfo.yoffset) * finfo.line_length;
+
+                    if (colorful){
+                        pixel_color(framebuffer,mem_location,(x % 255),(y % 255), ((y-x) % 255));
+                    } else {
+                        pixel_color(framebuffer,mem_location,255,255,255);
+                    }
+
+                    eps += dx;
+                    if ((eps << 1) >= dy){
+                        x++;
+                        eps -= dy;
+                    }
                 }
             }
         }
