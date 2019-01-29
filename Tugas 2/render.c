@@ -21,6 +21,7 @@ ssize_t n;
 int fd;
 pthread_t thread0;
 int flagShoot = 0;
+unsigned short bullet_selection;
 
 void delay(unsigned int ms){
     clock_t goal = ms + clock();
@@ -95,7 +96,7 @@ void drawBlast(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struc
     bresenham(x0-8,y0 + 30,x0-35,y0+12,0,fbp,vinfo,finfo); //Barat Laut
     bresenham(x0-21,y0 + 43,x0-35,y0+12,0,fbp,vinfo,finfo);
 
-	bresenham(x0-21,y0 + 43,x0-51,y0 + 51,0,fbp,vinfo,finfo); //Barat
+    bresenham(x0-21,y0 + 43,x0-51,y0 + 51,0,fbp,vinfo,finfo); //Barat
     bresenham(x0-21,y0 + 59,x0-51,y0 + 51,0,fbp,vinfo,finfo);
 
     bresenham(x0-21,y0 + 59,x0-35,y0+88,0,fbp,vinfo,finfo); //Barat Daya
@@ -107,7 +108,7 @@ void drawBlast(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struc
     bresenham(x0+8,y0 + 30,x0+35,y0+12,0,fbp,vinfo,finfo); //Timur Laut
     bresenham(x0+21,y0 + 43,x0+35,y0+12,0,fbp,vinfo,finfo);
 
-	bresenham(x0+21,y0 + 43,x0+51,y0 + 51,0,fbp,vinfo,finfo); //Timur
+    bresenham(x0+21,y0 + 43,x0+51,y0 + 51,0,fbp,vinfo,finfo); //Timur
     bresenham(x0+21,y0 + 59,x0+51,y0 + 51,0,fbp,vinfo,finfo);
 
     bresenham(x0+8,y0 + 72,x0+35,y0+88,0,fbp,vinfo,finfo); //Tenggara
@@ -153,23 +154,23 @@ void drawStar(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct
 }
 
 void drawBullets(int offset, char selection, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-	switch (selection){
-		case 0:
-            drawStar(302-offset,456-offset,fbp,vinfo,finfo);
-			break;
-		case 1:
-			drawStar(344-offset/2,427-offset,fbp,vinfo,finfo);
-			break;
-		case 2:
-			drawStar(400,415-offset,fbp,vinfo,finfo);
-			break;
-		case 3:
+    switch (selection){
+        case 0:
+            drawStar(302-offset/1.5,456-offset,fbp,vinfo,finfo);
+            break;
+        case 1:
+            drawStar(344-offset/2,427-offset,fbp,vinfo,finfo);
+            break;
+        case 2:
+            drawStar(400,415-offset,fbp,vinfo,finfo);
+            break;
+        case 3:
             drawStar(455+offset/2,427-offset,fbp,vinfo,finfo);
-			break;
-		case 4:
-            drawStar(498+offset,460-offset,fbp,vinfo,finfo);
-			break;
-	}
+            break;
+        case 4:
+            drawStar(498+offset/1.5,460-offset,fbp,vinfo,finfo);
+            break;
+    }
 
 }
 
@@ -181,25 +182,61 @@ void *userInput(){
                 continue;
             else
                 break;
-        } else
-        if (n != sizeof ev) {
+        } else if (n != sizeof ev) {
             errno = EIO;
             break;
         }
-           if (ev.type == EV_KEY && ev.value >= 0 && ev.value <= 2){
-             
-             if(ev.value == 0){
-                
-             }
-             if(ev.value == 1){
-                //menembak
+        if (ev.type == EV_KEY && ev.value >= 0 && ev.value <= 2){
+            if((ev.value == 1) && (!(flagShoot)) && (ev.code > 1) && (ev.code < 7)){
                 flagShoot = 1;
-             }
-           }
+                bullet_selection = ev.code;
+            }
+        }
     }
 }
 
+char checkIfShot(int star_offset, int plane_offset, int selection){
+    int x_star;
+    int y_star;
 
+    switch (selection){
+        case 0:
+            x_star = 302-star_offset/1.5;
+            y_star = 456-star_offset;
+            break;
+        case 1:
+            x_star = 344-star_offset/2;
+            y_star = 427-star_offset;
+            break;
+        case 2:
+            x_star = 400;
+            y_star = 415-star_offset;
+            break;
+        case 3:
+            x_star = 455+star_offset/2;
+            y_star = 427-star_offset;
+            break;
+        case 4:
+            x_star = 498+star_offset/1.5;
+            y_star = 460-star_offset;
+            break;
+    }
+
+    int x_star_coordinates[5] = {x_star-8, x_star+5,  x_star+11, x_star+5,  x_star-10};
+    int y_star_coordinates[5] = {y_star-8, y_star-10, y_star,    y_star+10, y_star+6};
+
+    // for (int i = 0; i < 5; i++){
+    //     if (checkIfIntersect(x_star_coordinates[i],y_star_coordinates[i],x_star,y_star,))
+    //         return TRUE
+
+    //     plane_offset-9,
+    //     drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
+    //     bresenham(x0-9 ,y0+26,x1-47,y1+26,0,fbp,vinfo,finfo);//lurus bawah
+    //     bresenham(x0+25,y0+26,x1   ,y1+26,0,fbp,vinfo,finfo);//lurus bawah
+    //     bresenham(x0+10,y0+15,x1-10,y1+15,0,fbp,vinfo,finfo);//tambahan bawah
+
+    // }
+}
 int main()
 {
     int fbfd;
@@ -251,45 +288,33 @@ int main()
     pthread_create(&thread0, NULL, userInput, NULL);
 
     while (1) {
-		clear_screen(fbp,800,600,vinfo,finfo);
+        clear_screen(fbp,800,600,vinfo,finfo);
 
-		if (350-c <= 0) {
-			c = 0;
+        if (350-c <= 0 ) {
+            c = 0;
             flagShoot = 0;
-		}
-		if (410-c2*2 <= 0) {
-			c2 = 0;
-		}
-		if (430-c3*3 <= 0) {
-			c3 = 0;
-		}
-		
-		drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
-		drawBlast(200+r,100,fbp,vinfo,finfo);
+            bullet_selection = 0;
+        }
         
-		drawCannon(fbp,vinfo,finfo);
+        drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
+        drawBlast(200+r,100,fbp,vinfo,finfo);
+        
+        drawCannon(fbp,vinfo,finfo);
 
         //draw bullet jika telah menembak
-		if (flagShoot==1){
-            drawBullets(c,0,fbp,vinfo,finfo);
-            drawBullets(c,1,fbp,vinfo,finfo);
-            drawBullets(c,2,fbp,vinfo,finfo);
-            drawBullets(c,3,fbp,vinfo,finfo);
-            drawBullets(c,4,fbp,vinfo,finfo);
+        if (flagShoot){
+            drawBullets(c,bullet_selection-2,fbp,vinfo,finfo);
             c++;
         }
 
-		if(450-c == 100 && (40+r)%800 == 350-c){
-			drawBlast((60+r)%800,100,fbp,vinfo,finfo);
-        }
-		//c++; 
-        c2++; c3++;
-		r=r+1;
-		delay(10000);
+        // if(450-c == 100 && (40+r)%800 == 350-c){
+        //     drawBlast((60+r)%800,100,fbp,vinfo,finfo);
+        // }
+        r=r+1;
+        delay(10000);
 
         //NOTE: Belom semua sisi pesawat di cek
-        if (checkIfIntersect(350-c,450-c,360-c,460-c,40+r+25,100+26,90+r,100+26)){
-            break;}
+        
     }
 
     munmap(fbp, screensize);
