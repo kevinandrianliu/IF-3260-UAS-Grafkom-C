@@ -340,7 +340,7 @@ int main()
         
         drawCannon(fbp,vinfo,finfo);
 
-        if(checkIfShot(c,r,bullet_selection-2)){
+        if(checkIfShot(c,r % vinfo.xres,bullet_selection-2)){
             drawBlast((60+r),100,fbp,vinfo,finfo);
             break;
         } else {
@@ -352,10 +352,11 @@ int main()
             drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
         }
         r=r+1;
-        delay(10000);
 
-        //NOTE: Belom semua sisi pesawat di cek
-        
+        if (r > vinfo.xres+25)
+            r = r % vinfo.xres;
+
+        delay(10000);
     }
 
     munmap(fbp, screensize);
