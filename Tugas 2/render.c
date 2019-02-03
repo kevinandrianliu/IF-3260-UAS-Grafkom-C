@@ -22,9 +22,31 @@ pthread_t thread0;
 int flagShoot = 0;
 unsigned short bullet_selection;
 
+pthread_t thread_list[5];
+char thread_avail_flag[5];
+
+
 void delay(unsigned int ms){
     clock_t goal = ms + clock();
     while (goal > clock());
+}
+
+char getAvailableThread(){
+    for (int i = 0; i < 5; i++){
+        if (thread_avail_flag[i]){
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void *thread_run(void * thread_num){
+    int num = *(int *) thread_num;
+    
+    sleep(3);
+
+    thread_avail_flag[num] = TRUE;
 }
 
 void *userInput(){
@@ -100,6 +122,8 @@ int main()
 
     int y = 600;
     for (;;){
+        break;
+
         clear_screen(fbp,800,600,vinfo,finfo);
         if ((y>=0) && (y<600))
             nama(y,fbp, vinfo, finfo);
@@ -125,6 +149,12 @@ int main()
             break;
     }
 
+    int count = 0;
+    for (int i = 0; i < 5; i++){
+        thread_avail_flag[i] = TRUE;
+    }
+    char available_thread = 0;
+
     while (1) {
         clear_screen(fbp,800,600,vinfo,finfo);
 
@@ -135,18 +165,27 @@ int main()
         }
         
         drawCannon(fbp,vinfo,finfo);
+        if ((available_thread = getAvailableThread()) != -1){
+            thread_avail_flag[available_thread] = FALSE;
 
-        if(checkIfShot(c,r % vinfo.xres,bullet_selection-2)){
-            drawBlast((60+r),100,fbp,vinfo,finfo);
-            break;
+            printf("THREAD %d RUNNING.\n", available_thread);
+            pthread_create(&(thread_list[available_thread]), NULL, thread_run, (void *) &available_thread);
         } else {
-            //draw bullet jika telah menembak
-            if (flagShoot){
-                drawBullets(c,bullet_selection-2,fbp,vinfo,finfo);
-                c++;
-            }
-            drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
+            printf("THREAD NOT AVAILABLE. WAITING FOR 5s.\n");
+            sleep(2);
         }
+
+        // if(checkIfShot(c,r % vinfo.xres,bullet_selection-2)){
+        //     drawBlast((60+r),100,fbp,vinfo,finfo);
+        //     break;
+        // } else {
+        //     //draw bullet jika telah menembak
+        //     if (flagShoot){
+        //         drawBullets(c,bullet_selection-2,fbp,vinfo,finfo);
+        //         c++;
+        //     }
+        //     drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
+        // }
         r=r+1;
 
         if (r > vinfo.xres+25)
