@@ -200,30 +200,43 @@ void drawPlane(int x0, int y0, int x1, int y1, char * fbp, struct fb_var_screeni
     bresenham(x0-10,y0+25,x1-80,y1-15,0,fbp,vinfo,finfo);//ekor
 }
 
-void drawBlast(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-    bresenham(x0,y0,x0-8,y0 + 30,0,fbp,vinfo,finfo); //Atas
-    bresenham(x0,y0,x0+8,y0 + 30,0,fbp,vinfo,finfo);
+void drawBlast(int x0, int y0, int r, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
 
-    bresenham(x0-8,y0 + 30,x0-35,y0+12,0,fbp,vinfo,finfo); //Barat Laut
-    bresenham(x0-21,y0 + 43,x0-35,y0+12,0,fbp,vinfo,finfo);
+	int outert = 51;
+	int outerd = 39;
+	int outerx = 35;
+	int innerl = 21;
+	int inners = 8;
 
-    bresenham(x0-21,y0 + 43,x0-51,y0 + 51,0,fbp,vinfo,finfo); //Barat
-    bresenham(x0-21,y0 + 59,x0-51,y0 + 51,0,fbp,vinfo,finfo);
+	int ott = r;
+	int otd = outerd*r/outert;
+	int otx = outerx*r/outert;
+	int inl  = innerl*r/outert;
+	int ins = inners*r/outert;
 
-    bresenham(x0-21,y0 + 59,x0-35,y0+88,0,fbp,vinfo,finfo); //Barat Daya
-    bresenham(x0-8,y0 + 72,x0-35,y0+88,0,fbp,vinfo,finfo);
+    bresenham(x0 - ins, y0 - inl, x0, y0 - ott, 0, fbp, vinfo, finfo); //Atas
+    bresenham(x0 + ins, y0 - inl, x0, y0 - ott, 0, fbp, vinfo, finfo);
 
-    bresenham(x0-8,y0 + 72,x0,y0 + 102,0,fbp,vinfo,finfo); //Selatan
-    bresenham(x0+8,y0 + 72,x0,y0 + 102,0,fbp,vinfo,finfo);
+    bresenham(x0 - ins, y0 - inl, x0 - otx, y0 - otd, 0, fbp, vinfo, finfo); //Barat Laut
+    bresenham(x0 - inl, y0 - ins, x0 - otx, y0 - otd, 0, fbp, vinfo, finfo);
 
-    bresenham(x0+8,y0 + 30,x0+35,y0+12,0,fbp,vinfo,finfo); //Timur Laut
-    bresenham(x0+21,y0 + 43,x0+35,y0+12,0,fbp,vinfo,finfo);
+    bresenham(x0 - inl, y0 - ins, x0 - ott, y0, 0, fbp, vinfo, finfo); //Barat
+    bresenham(x0 - inl, y0 + ins, x0 - ott, y0, 0, fbp, vinfo, finfo);
 
-    bresenham(x0+21,y0 + 43,x0+51,y0 + 51,0,fbp,vinfo,finfo); //Timur
-    bresenham(x0+21,y0 + 59,x0+51,y0 + 51,0,fbp,vinfo,finfo);
+    bresenham(x0 - inl, y0 + ins, x0 - otx, y0 + otd, 0, fbp, vinfo, finfo); //Barat Daya
+    bresenham(x0 - ins, y0 + inl, x0 - otx, y0 + otd, 0, fbp, vinfo, finfo);
 
-    bresenham(x0+8,y0 + 72,x0+35,y0+88,0,fbp,vinfo,finfo); //Tenggara
-    bresenham(x0+21,y0 + 59,x0+35,y0+88,0,fbp,vinfo,finfo);
+    bresenham(x0 - ins, y0 + inl, x0, y0 + ott, 0, fbp, vinfo, finfo); //Selatan
+    bresenham(x0 + ins, y0 + inl, x0, y0 + ott, 0, fbp, vinfo, finfo);
+
+    bresenham(x0 + ins, y0 - inl, x0 + otx, y0 - otd, 0, fbp, vinfo, finfo); //Timur Laut
+    bresenham(x0 + inl, y0 - ins, x0 + otx, y0 - otd, 0, fbp, vinfo, finfo);
+
+    bresenham(x0 + inl, y0 - ins, x0 + ott, y0, 0, fbp, vinfo, finfo); //Timur
+    bresenham(x0 + inl, y0 + ins, x0 + ott, y0, 0, fbp, vinfo, finfo);
+
+    bresenham(x0 + inl, y0 + ins, x0 + otx, y0 + otd, 0, fbp, vinfo, finfo); //Tenggara
+    bresenham(x0 + ins, y0 + inl, x0 + otx, y0 + otd, 0, fbp, vinfo, finfo);
 
 
 }
