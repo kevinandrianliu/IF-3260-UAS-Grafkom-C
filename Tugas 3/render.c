@@ -183,14 +183,19 @@ int main()
     char available_thread = 0;
     delay.tv_nsec /= 5;
 
+	int blast = 1;
     // ---- Infinite loop of framebuffer drawing
     while (1) {
         // ---- Checks if the plane already shot down
         if (plane_shot_down){   // If yes, break out of the loop
             clear_screen(fbp,800,600,vinfo,finfo);
             drawCannon(fbp,vinfo,finfo);
-            drawBlast((60 + plane_offset), 100, fbp, vinfo, finfo);
-            break;
+            drawBlast((60 + plane_offset), 100, blast, fbp, vinfo, finfo);
+			blast++;
+            nanosleep(&delay,NULL);
+            if (blast == 51) {
+				break;
+			}
         } else {    // If not, continue the loop
             // ---- Clear the screen
             clear_screen(fbp,800,600,vinfo,finfo);
