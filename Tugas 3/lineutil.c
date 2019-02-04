@@ -262,20 +262,10 @@ void drawStar(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct
     // bresenham(x0+11,y0,x0,y0,TRUE,fbp,vinfo,finfo);
     // bresenham(x0+5,y0+10,x0,y0,TRUE,fbp,vinfo,finfo);
     // bresenham(x0-10,y0+6,x0,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0-10,y0,x0-4,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+4,y0,x0+10,y0,TRUE,fbp,vinfo,finfo);
-    
-    bresenham(x0-4,y0,x0,y0-8,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+4,y0,x0,y0-8,TRUE,fbp,vinfo,finfo);
-
-    bresenham(x0-10,y0,x0-5,y0+5,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+10,y0,x0+5,y0+5,TRUE,fbp,vinfo,finfo);
-
-    bresenham(x0-5,y0+5,x0-8,y0+12,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+5,y0+5,x0+8,y0+12,TRUE,fbp,vinfo,finfo);
-
-    bresenham(x0-8,y0+12,x0,y0+7,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+8,y0+12,x0,y0+7,TRUE,fbp,vinfo,finfo);
+    bresenham(x0-7,y0,x0,y0-7,TRUE,fbp,vinfo,finfo);
+    bresenham(x0,y0-7,x0+7,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+7,y0,x0,y0+7,TRUE,fbp,vinfo,finfo);
+    bresenham(x0,y0+7,x0-7,y0,TRUE,fbp,vinfo,finfo);
 }
 
 void drawBullets(int offset, char selection, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
@@ -326,10 +316,15 @@ char checkIfShot(int star_offset, int plane_offset, int selection){
             break;
     }
 
-    int x_min_star_box = min(x_star-8, min(x_star+5,  min(x_star+11, min(x_star+5,  x_star-10))));
-    int y_min_star_box = min(y_star-8, min(y_star-10, min(y_star,    min(y_star+10, y_star+6))));
-    int x_max_star_box = max(x_star-8, max(x_star+5,  max(x_star+11, max(x_star+5,  x_star-10))));
-    int y_max_star_box = max(y_star-8, max(y_star-10, max(y_star,    max(y_star+10, y_star+6))));
+    bresenham(x0-7,y0,x0,y0-7,TRUE,fbp,vinfo,finfo);
+    bresenham(x0,y0-7,x0+7,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+7,y0,x0,y0+7,TRUE,fbp,vinfo,finfo);
+    bresenham(x0,y0+7,x0-7,y0,TRUE,fbp,vinfo,finfo);
+
+    int x_min_star_box = min(x_star-7, min(x_star, x_star+7));
+    int y_min_star_box = min(y_star-7, min(y_star, y_star+7))
+    int x_max_star_box = max(x_star-7, max(x_star, x_star+7))
+    int y_max_star_box = max(y_star-7, max(y_star, y_star+7))
     
     int x0_plane_coordinates[6] = {
         40+plane_offset-9,
@@ -365,7 +360,7 @@ char checkIfShot(int star_offset, int plane_offset, int selection){
     };
     for (int i = 0; i < 6; i++){
         if (checkIfIntersect(x_min_star_box,y_min_star_box,x_min_star_box,y_max_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
-        return TRUE;
+            return TRUE;
         if (checkIfIntersect(x_min_star_box,y_max_star_box,x_max_star_box,y_max_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
             return TRUE;
         if (checkIfIntersect(x_max_star_box,y_max_star_box,x_max_star_box,y_min_star_box,x0_plane_coordinates[i],y0_plane_coordinates[i],x1_plane_coordinates[i],y1_plane_coordinates[i]))
