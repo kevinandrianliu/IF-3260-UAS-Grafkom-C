@@ -19,13 +19,14 @@ struct input_event ev;
 ssize_t n;
 int fd;
 pthread_t thread0;
-int flagShoot = 0;
-unsigned short bullet_selection;
 
-pthread_t thread_list[5];
-char thread_avail_flag[5];
-char plane_shot_down = FALSE;
-int r = 0;
+int flagShoot = 0;              // Stores the info if user has invoked an attack command
+unsigned short bullet_selection;// Stores the attack selection user inputs
+
+pthread_t thread_list[5];       // Lists the thread available for each shots
+char thread_avail_flag[5];      // Stores the thread info, whether it's available to use or not
+char plane_shot_down = FALSE;   // Stores the plane info if it has been shot down by one of the shots
+int plane_offset = 0;           // Stores the plane offset from the initial point
 
 
 void delay(unsigned int ms){
@@ -34,6 +35,8 @@ void delay(unsigned int ms){
 }
 
 char getAvailableThread(){
+// Checks if there's an available thread to use
+// Returns 0 to 4 as the thread number, -1 if no thread is available
     for (int i = 0; i < 5; i++){
         if (thread_avail_flag[i]){
             return i;
@@ -43,27 +46,27 @@ char getAvailableThread(){
     return -1;
 }
 
-void *thread_run(void * thread_bullet_info){
+void *render_bullet_thread(void * thread_bullet_info){
+// Function for rendering the bullets in thread
     struct thread_bullet_param tbp;
 
     tbp = *(struct thread_bullet_param *) thread_bullet_info;
     
-    int c = 0;
+    int bullet_offset = 0;
 
-    //printf("Thread %d running.\n", tbp.thread_number);
     for(;;){
         if (plane_shot_down){
             break;
         }
 
-        if (checkIfShot(c, r % tbp.vinfo.xres, tbp.turret_number)){
+        if (checkIfShot(bullet_offset, plane_offset % tbp.vinfo.xres, tbp.turret_number)){
             plane_shot_down = TRUE;
             break;
         }
 
-        if (350 - c > 0){
-            drawBullets(c, tbp.turret_number, tbp.framebuffer, tbp.vinfo, tbp.finfo);
-            c++;
+        if (350 - bullet_offset > 0){
+            drawBullets(bullet_offset, tbp.turret_number, tbp.framebuffer, tbp.vinfo, tbp.finfo);
+            bullet_offset++;
         } else {
             break;
         }
@@ -72,7 +75,6 @@ void *thread_run(void * thread_bullet_info){
     }
 
     thread_avail_flag[tbp.thread_number] = TRUE;
-    //printf("Thread %d done.\n", tbp.thread_number);
 }
 
 void *userInput(){
@@ -130,84 +132,75 @@ int main()
         exit(4);
     }
 
-    //input keyboard
+    // Input keyboard
     const char *dev = "/dev/input/event4";
     fd = open(dev, O_RDONLY);
     if (fd == -1) {
         fprintf(stderr, "Cannot open %s: %s.\n", dev, strerror(errno));
         return EXIT_FAILURE;
     }
-
-    int c = 0;
     
     //start user input thread
     pthread_create(&thread0, NULL, userInput, NULL);
 
-    clear_screen(fbp,800,600,vinfo,finfo);
-
-    int y = 600;
+    // -------- Printing Credits --------
+    int vertical_offset = 600;
     for (;;){
         break;
 
         clear_screen(fbp,800,600,vinfo,finfo);
-        if ((y>=0) && (y<600))
-            nama(y,fbp, vinfo, finfo);
-        if ((y+50>=0) && (y+50<600))
-            bella(y+50, fbp, vinfo, finfo);
-        if ((y+100>=0) && (y+100<600))
-            yora(y+100,fbp,vinfo, finfo);
-        if ((y+150>=0) && (y+150<600))
-            kevin_a(y+150, fbp, vinfo, finfo);
-        if ((y+200>=0) && (y+200<600))
-            kevin_f(y+200, fbp, vinfo, finfo);
-        if ((y+250>=0) && (y+250<600))
-            tere(y+250, fbp, vinfo, finfo);
-        if ((y+300>=0) && (y+300<600))
-            fildah(y+300, fbp, vinfo, finfo);
-        if ((y+350>=0) && (y+350<600))
-            richard(y+350, fbp, vinfo, finfo);
+        if ((vertical_offset>=0) && (vertical_offset<600))
+            nama(vertical_offset,fbp, vinfo, finfo);
+        if ((vertical_offset+50>=0) && (vertical_offset+50<600))
+            bella(vertical_offset+50, fbp, vinfo, finfo);
+        if ((vertical_offset+100>=0) && (vertical_offset+100<600))
+            yora(vertical_offset+100,fbp,vinfo, finfo);
+        if ((vertical_offset+150>=0) && (vertical_offset+150<600))
+            kevin_a(vertical_offset+150, fbp, vinfo, finfo);
+        if ((vertical_offset+200>=0) && (vertical_offset+200<600))
+            kevin_f(vertical_offset+200, fbp, vinfo, finfo);
+        if ((vertical_offset+250>=0) && (vertical_offset+250<600))
+            tere(vertical_offset+250, fbp, vinfo, finfo);
+        if ((vertical_offset+300>=0) && (vertical_offset+300<600))
+            fildah(vertical_offset+300, fbp, vinfo, finfo);
+        if ((vertical_offset+350>=0) && (vertical_offset+350<600))
+            richard(vertical_offset+350, fbp, vinfo, finfo);
 
-        y -= 3;
+        vertical_offset -= 3;
         delay(50000);
 
-        if (y < -400)
+        if (vertical_offset < -400)
             break;
     }
 
-    int count = 0;
+    // -------- Printing Game Sequence --------
+    // ---- Initialize thread flags
     for (int i = 0; i < 5; i++){
         thread_avail_flag[i] = TRUE;
     }
     char available_thread = 0;
 
+    // ---- Infinite loop of framebuffer drawing
     while (1) {
-        if (plane_shot_down){
+        // ---- Checks if the plane already shot down
+        if (plane_shot_down){   // If yes, break out of the loop
             clear_screen(fbp,800,600,vinfo,finfo);
             drawCannon(fbp,vinfo,finfo);
-            drawBlast((60 + r), 100, fbp, vinfo, finfo);
+            drawBlast((60 + plane_offset), 100, fbp, vinfo, finfo);
             break;
-        } else {
+        } else {    // If not, continue the loop
+            // ---- Clear the screen
             clear_screen(fbp,800,600,vinfo,finfo);
-
-            if (350-c <= 0 ) {
-                c = 0;
-                flagShoot = 0;
-                bullet_selection = 0;
-            }
             
+            // ---- Draw the cannon
             drawCannon(fbp,vinfo,finfo);
-            // if ((available_thread = getAvailableThread()) != -1){
-            //     thread_avail_flag[available_thread] = FALSE;
 
-            //     printf("THREAD %d RUNNING.\n", available_thread);
-            //     pthread_create(&(thread_list[available_thread]), NULL, thread_run, (void *) &available_thread);
-            // } else {
-            //     printf("THREAD NOT AVAILABLE. WAITING FOR 5s.\n");
-            //     sleep(2);
-            // }
-
+            // ---- Checks whether the user has inputted an attack command (1-5)
             if (flagShoot){
+
+                // ---- Checks if there's a thread available to use
                 if ((available_thread = getAvailableThread()) != -1){
+                    // ---- Set the thread to in use
                     thread_avail_flag[available_thread] = FALSE;
 
                     struct thread_bullet_param thread_bullet_info;
@@ -218,28 +211,20 @@ int main()
                     thread_bullet_info.vinfo = vinfo;
                     thread_bullet_info.finfo = finfo;
 
-                    pthread_create(&(thread_list[available_thread]), NULL, thread_run, (void *) &thread_bullet_info);
+                    pthread_create(&(thread_list[available_thread]), NULL, render_bullet_thread, (void *) &thread_bullet_info);
 
+                    // ---- Reset the flagShoot so user can input another attack command
                     flagShoot = FALSE;
                 }
             }
 
-            // if(checkIfShot(c,r % vinfo.xres,bullet_selection-2)){
-            //     drawBlast((60+r),100,fbp,vinfo,finfo);
-            //     break;
-            // } else {
-            //     //draw bullet jika telah menembak
-            //     if (flagShoot){
-            //         drawBullets(c,bullet_selection-2,fbp,vinfo,finfo);
-            //         c++;
-            //     }
-            //     drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
-            // }
-            drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
-            r=r+1;
+            // ---- Draw the plane
+            drawPlane(40+plane_offset,100,90+plane_offset,100,fbp,vinfo,finfo);
+            plane_offset++;
 
-            if (r > vinfo.xres+25)
-                r = r % vinfo.xres;
+            // ---- Reset the y position of plane
+            if (plane_offset > vinfo.xres+25)
+                plane_offset = plane_offset % vinfo.xres;
 
             delay(10000);
         }
