@@ -28,12 +28,6 @@ char thread_avail_flag[5];      // Stores the thread info, whether it's availabl
 char plane_shot_down = FALSE;   // Stores the plane info if it has been shot down by one of the shots
 int plane_offset = 0;           // Stores the plane offset from the initial point
 
-
-void delay(unsigned int ms){
-    clock_t goal = ms + clock();
-    while (goal > clock());
-}
-
 char getAvailableThread(){
 // Checks if there's an available thread to use
 // Returns 0 to 4 as the thread number, -1 if no thread is available
@@ -53,6 +47,9 @@ void *render_bullet_thread(void * thread_bullet_info){
     tbp = *(struct thread_bullet_param *) thread_bullet_info;
     
     int bullet_offset = 0;
+    struct timespec delay;
+    delay.tv_sec = 0;
+    delay.tv_nsec = 10000000;
 
     for(;;){
         if (plane_shot_down){
@@ -71,7 +68,7 @@ void *render_bullet_thread(void * thread_bullet_info){
             break;
         }
 
-        delay(20000);
+        nanosleep(&delay,NULL);
     }
 
     thread_avail_flag[tbp.thread_number] = TRUE;
@@ -143,6 +140,10 @@ int main()
     //start user input thread
     pthread_create(&thread0, NULL, userInput, NULL);
 
+    struct timespec delay;
+    delay.tv_sec = 0;
+    delay.tv_nsec = 50000000;
+
     // -------- Printing Credits --------
     int vertical_offset = 600;
     for (;;){
@@ -167,7 +168,7 @@ int main()
             richard(vertical_offset+350, fbp, vinfo, finfo);
 
         vertical_offset -= 3;
-        delay(50000);
+        nanosleep(&delay,NULL);
 
         if (vertical_offset < -400)
             break;
@@ -178,7 +179,9 @@ int main()
     for (int i = 0; i < 5; i++){
         thread_avail_flag[i] = TRUE;
     }
+
     char available_thread = 0;
+    delay.tv_nsec /= 5;
 
     // ---- Infinite loop of framebuffer drawing
     while (1) {
@@ -226,7 +229,7 @@ int main()
             if (plane_offset > vinfo.xres+25)
                 plane_offset = plane_offset % vinfo.xres;
 
-            delay(10000);
+            nanosleep(&delay,NULL);
         }
     }
 
