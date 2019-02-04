@@ -24,6 +24,8 @@ unsigned short bullet_selection;
 
 pthread_t thread_list[5];
 char thread_avail_flag[5];
+char plane_shot_down = FALSE;
+int r = 0;
 
 
 void delay(unsigned int ms){
@@ -41,25 +43,36 @@ char getAvailableThread(){
     return -1;
 }
 
-void *thread_run(void * thread_num, void * turret_num_param, void * fbp_param, void * vinfo_param, void * finfo_param){
-    int num = *(int *) thread_num;
-    char *fbp = (char *) fbp_param;
-    struct fb_var_screeninfo vinfo = *(struct fb_var_screeninfo) *vinfo;
-    struct fb_fix_screeninfo finfo = *(struct fb_fix_screeninfo) *finfo;
-    int turret_num = *(int *) turret_num_param;
+void *thread_run(void * thread_bullet_info){
+    struct thread_bullet_param tbp;
+
+    tbp = *(struct thread_bullet_param *) thread_bullet_info;
     
     int c = 0;
 
+    //printf("Thread %d running.\n", tbp.thread_number);
     for(;;){
+        if (plane_shot_down){
+            break;
+        }
+
+        if (checkIfShot(c, r % tbp.vinfo.xres, tbp.turret_number)){
+            plane_shot_down = TRUE;
+            break;
+        }
+
         if (350 - c > 0){
-            drawBullets(c, turret_num_param-2, fbp, vinfo, finfo);
+            drawBullets(c, tbp.turret_number, tbp.framebuffer, tbp.vinfo, tbp.finfo);
             c++;
         } else {
             break;
         }
+
+        delay(20000);
     }
 
-    thread_avail_flag[num] = TRUE;
+    thread_avail_flag[tbp.thread_number] = TRUE;
+    //printf("Thread %d done.\n", tbp.thread_number);
 }
 
 void *userInput(){
@@ -126,7 +139,6 @@ int main()
     }
 
     int c = 0;
-    int r = 0;
     
     //start user input thread
     pthread_create(&thread0, NULL, userInput, NULL);
@@ -169,60 +181,82 @@ int main()
     char available_thread = 0;
 
     while (1) {
-        clear_screen(fbp,800,600,vinfo,finfo);
+        if (plane_shot_down){
+            clear_screen(fbp,800,600,vinfo,finfo);
+            drawCannon(fbp,vinfo,finfo);
+            drawBlast((60 + r), 100, fbp, vinfo, finfo);
+            break;
+        } else {
+            clear_screen(fbp,800,600,vinfo,finfo);
 
-        if (350-c <= 0 ) {
-            c = 0;
-            flagShoot = 0;
-            bullet_selection = 0;
-        }
-        
-        drawCannon(fbp,vinfo,finfo);
-        // if ((available_thread = getAvailableThread()) != -1){
-        //     thread_avail_flag[available_thread] = FALSE;
-
-        //     printf("THREAD %d RUNNING.\n", available_thread);
-        //     pthread_create(&(thread_list[available_thread]), NULL, thread_run, (void *) &available_thread);
-        // } else {
-        //     printf("THREAD NOT AVAILABLE. WAITING FOR 5s.\n");
-        //     sleep(2);
-        // }
-
-        if (flagShoot){
-            if ((available_thread = getAvailableThread()) != -1){
-                thread_avail_flag[available_thread] = FALSE;
-
-                int bullet_selection_fix = bullet_selection - 2;
-                pthread_create(&(thread_list[available_thread]), NULL, thread_run, (void *) &available_thread, (void *) &(bullet_selection_fix), (void *) fbp, (void *) vinfo, (void *) finfo);
+            if (350-c <= 0 ) {
+                c = 0;
+                flagShoot = 0;
+                bullet_selection = 0;
             }
+            
+            drawCannon(fbp,vinfo,finfo);
+            // if ((available_thread = getAvailableThread()) != -1){
+            //     thread_avail_flag[available_thread] = FALSE;
+
+            //     printf("THREAD %d RUNNING.\n", available_thread);
+            //     pthread_create(&(thread_list[available_thread]), NULL, thread_run, (void *) &available_thread);
+            // } else {
+            //     printf("THREAD NOT AVAILABLE. WAITING FOR 5s.\n");
+            //     sleep(2);
+            // }
+
+            if (flagShoot){
+                if ((available_thread = getAvailableThread()) != -1){
+                    thread_avail_flag[available_thread] = FALSE;
+
+                    struct thread_bullet_param thread_bullet_info;
+
+                    thread_bullet_info.thread_number = available_thread;
+                    thread_bullet_info.turret_number = bullet_selection-2;
+                    thread_bullet_info.framebuffer = fbp;
+                    thread_bullet_info.vinfo = vinfo;
+                    thread_bullet_info.finfo = finfo;
+
+                    pthread_create(&(thread_list[available_thread]), NULL, thread_run, (void *) &thread_bullet_info);
+
+                    flagShoot = FALSE;
+                }
+            }
+
+            // if(checkIfShot(c,r % vinfo.xres,bullet_selection-2)){
+            //     drawBlast((60+r),100,fbp,vinfo,finfo);
+            //     break;
+            // } else {
+            //     //draw bullet jika telah menembak
+            //     if (flagShoot){
+            //         drawBullets(c,bullet_selection-2,fbp,vinfo,finfo);
+            //         c++;
+            //     }
+            //     drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
+            // }
+            drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
+            r=r+1;
+
+            if (r > vinfo.xres+25)
+                r = r % vinfo.xres;
+
+            delay(10000);
         }
-
-        // if(checkIfShot(c,r % vinfo.xres,bullet_selection-2)){
-        //     drawBlast((60+r),100,fbp,vinfo,finfo);
-        //     break;
-        // } else {
-        //     //draw bullet jika telah menembak
-        //     if (flagShoot){
-        //         drawBullets(c,bullet_selection-2,fbp,vinfo,finfo);
-        //         c++;
-        //     }
-        //     drawPlane(40+r,100,90+r,100,fbp,vinfo,finfo);
-        // }
-        r=r+1;
-
-        if (r > vinfo.xres+25)
-            r = r % vinfo.xres;
-
-        delay(10000);
     }
 
     munmap(fbp, screensize);
     close(fbfd);
 
+    for (int i = 0; i < 5; i++){
+        pthread_join(thread_list[i],NULL);
+    }
+
     while(1);
 
     fflush(stdout);
     fprintf(stderr, "%s.\n", strerror(errno));
+
     return 0;
 }
 

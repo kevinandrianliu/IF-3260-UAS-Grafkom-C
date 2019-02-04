@@ -8,6 +8,14 @@
 #define max(a,b) (a > b ? a : b)
 #define min(a,b) (a <= b ? a : b)
 
+struct thread_bullet_param {
+    int thread_number;
+    int turret_number;
+    char *framebuffer;
+    struct fb_var_screeninfo vinfo;
+    struct fb_fix_screeninfo finfo;
+};
+
 void render_a(int x, int y, int b, int g, int r, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
 void render_b(int x, int y, int b, int g, int r, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
 void render_c(int x, int y, int b, int g, int r, char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo);
