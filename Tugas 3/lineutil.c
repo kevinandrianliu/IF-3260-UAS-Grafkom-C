@@ -257,11 +257,25 @@ void drawCannon(char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screen
 }
 
 void drawStar(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
-    bresenham(x0-8,y0-8,x0,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+5,y0-10,x0,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+11,y0,x0,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+5,y0+10,x0,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0-10,y0+6,x0,y0,TRUE,fbp,vinfo,finfo);
+    // bresenham(x0-8,y0-8,x0,y0,TRUE,fbp,vinfo,finfo);
+    // bresenham(x0+5,y0-10,x0,y0,TRUE,fbp,vinfo,finfo);
+    // bresenham(x0+11,y0,x0,y0,TRUE,fbp,vinfo,finfo);
+    // bresenham(x0+5,y0+10,x0,y0,TRUE,fbp,vinfo,finfo);
+    // bresenham(x0-10,y0+6,x0,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0-10,y0,x0-4,y0,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+4,y0,x0+10,y0,TRUE,fbp,vinfo,finfo);
+    
+    bresenham(x0-4,y0,x0,y0-8,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+4,y0,x0,y0-8,TRUE,fbp,vinfo,finfo);
+
+    bresenham(x0-10,y0,x0-5,y0+5,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+10,y0,x0+5,y0+5,TRUE,fbp,vinfo,finfo);
+
+    bresenham(x0-5,y0+5,x0-8,y0+12,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+5,y0+5,x0+8,y0+12,TRUE,fbp,vinfo,finfo);
+
+    bresenham(x0-8,y0+12,x0,y0+7,TRUE,fbp,vinfo,finfo);
+    bresenham(x0+8,y0+12,x0,y0+7,TRUE,fbp,vinfo,finfo);
 }
 
 void drawBullets(int offset, char selection, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
