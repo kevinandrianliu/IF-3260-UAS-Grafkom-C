@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 #include "lineutil.h"
 #include "utilities.h"
 
@@ -266,6 +267,8 @@ void drawStar(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct
     bresenham(x0,y0-7,x0+7,y0,TRUE,fbp,vinfo,finfo);
     bresenham(x0+7,y0,x0,y0+7,TRUE,fbp,vinfo,finfo);
     bresenham(x0,y0+7,x0-7,y0,TRUE,fbp,vinfo,finfo);
+
+    rasterScan(x0-7,y0-7,x0+7,y0+7,TRUE,fbp,vinfo,finfo);
 }
 
 void drawBullets(int offset, char selection, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
@@ -316,15 +319,10 @@ char checkIfShot(int star_offset, int plane_offset, int selection){
             break;
     }
 
-    bresenham(x0-7,y0,x0,y0-7,TRUE,fbp,vinfo,finfo);
-    bresenham(x0,y0-7,x0+7,y0,TRUE,fbp,vinfo,finfo);
-    bresenham(x0+7,y0,x0,y0+7,TRUE,fbp,vinfo,finfo);
-    bresenham(x0,y0+7,x0-7,y0,TRUE,fbp,vinfo,finfo);
-
     int x_min_star_box = min(x_star-7, min(x_star, x_star+7));
-    int y_min_star_box = min(y_star-7, min(y_star, y_star+7))
-    int x_max_star_box = max(x_star-7, max(x_star, x_star+7))
-    int y_max_star_box = max(y_star-7, max(y_star, y_star+7))
+    int y_min_star_box = min(y_star-7, min(y_star, y_star+7));
+    int x_max_star_box = max(x_star-7, max(x_star, x_star+7));
+    int y_max_star_box = max(y_star-7, max(y_star, y_star+7));
     
     int x0_plane_coordinates[6] = {
         40+plane_offset-9,
@@ -370,4 +368,62 @@ char checkIfShot(int star_offset, int plane_offset, int selection){
     }
 
     return FALSE;
+}
+
+char checkPixelAround(int x, int y, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    long int mem_location;
+    int max_x;
+
+    char pixel_up = FALSE;
+    char pixel_down = FALSE;
+
+    for (int i = x-1; i < x + 2; i++){
+        if (!(pixel_up)){
+            mem_location = (i + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y - 1 + vinfo.yoffset) * finfo.line_length;
+            if ((*(fbp + mem_location) || *(fbp + mem_location + 1) || *(fbp + mem_location + 2)) > 0x00){
+                pixel_up = TRUE;
+            }
+        }
+        if (!(pixel_down)){
+            mem_location = (i + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y + 1 + vinfo.yoffset) * finfo.line_length;
+            if ((*(fbp + mem_location) || *(fbp + mem_location + 1) || *(fbp + mem_location + 2)) > 0x00){
+                pixel_down = TRUE;
+            }
+        }
+    }
+
+    return (pixel_up && pixel_down);
+}
+
+void rasterScan(int x_min, int y_min, int x_max, int y_max, char colorful, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    char fill_flag = 0;  // 0 = Don't fill, 1 = Fill
+    long int mem_location;
+
+    // Assumes x is not filled from the top or bottom of screen
+    for (int j = y_min; j <= y_max; j++){
+        for (int i = x_min; i <= x_max; i++){
+            mem_location = (i + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (j + vinfo.yoffset) * finfo.line_length;
+
+            if ((*(fbp + mem_location) || *(fbp + mem_location + 1) || *(fbp + mem_location + 2)) == 0x00){
+                if (fill_flag){
+                    if (colorful){
+                        pixel_color(fbp,mem_location,(i % 255),(j % 255), ((j-i) % 255));
+                    } else {
+                        pixel_color(fbp,mem_location,255,255,255);
+                    }
+                }
+            } else {
+                if (checkPixelAround(i, j, fbp, vinfo, finfo)){
+                    fill_flag = !(fill_flag);
+                    
+                    mem_location = (i + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (j + vinfo.yoffset) * finfo.line_length;
+                    if (colorful){
+                        pixel_color(fbp,mem_location,(i % 255),(j % 255), ((j-i) % 255));
+                    } else {
+                        pixel_color(fbp,mem_location,255,255,255);
+                    }
+                }
+            }
+        }
+    }
 }
