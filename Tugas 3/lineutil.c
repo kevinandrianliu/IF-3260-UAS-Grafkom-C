@@ -440,3 +440,7 @@ void rasterScan(int x_min, int y_min, int x_max, int y_max, char colorful, char 
         }
     }
 }
+
+void randomBullet(int x, int y, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    drawStar(x,y,fbp,vinfo,finfo);
+}
