@@ -196,31 +196,29 @@ int main()
             clear_screen(fbp,800,600,vinfo,finfo);
             drawCannon(fbp,vinfo,finfo);
             drawBlast((60 + plane_offset), 100, blast, fbp, vinfo, finfo);
-			blast++;
+			if (blast < 51) {
+				blast++;
+			} else {
             //nanosleep(&delay,NULL);
-
-            while(height+down < 500){
-                
-                clear_screen(fbp,800,600,vinfo,finfo);
-            
-            // ---- Draw the cannon
-                drawCannon(fbp,vinfo,finfo);
-                drawPlanePiece1(70+plane_offset,100+down,120+plane_offset,100+down,fbp,vinfo,finfo);
-                drawPlanePiece2(50+plane_offset,100+down,100+plane_offset,100+down,fbp,vinfo,finfo);
-                drawPlanePiece3(40+plane_offset,100+down,90+plane_offset,100+down,fbp,vinfo,finfo);
-                down++;
-                nanosleep(&delay,NULL);
-            } 
-            //else{
-            drawPlanePiece1(70+plane_offset,500,120+plane_offset,500,fbp,vinfo,finfo);
-            drawPlanePiece2(50+plane_offset,500,100+plane_offset,500,fbp,vinfo,finfo);
-            drawPlanePiece3(40+plane_offset,500,90+plane_offset,500,fbp,vinfo,finfo);
-          
-            
+		        while(height+down < 500){
+		            
+		            clear_screen(fbp,800,600,vinfo,finfo);
+		        
+		        // ---- Draw the cannon
+		            drawCannon(fbp,vinfo,finfo);
+		            drawPlanePiece1(70+plane_offset,100+down,120+plane_offset,100+down,fbp,vinfo,finfo);
+		            drawPlanePiece2(50+plane_offset,100+down,100+plane_offset,100+down,fbp,vinfo,finfo);
+		            drawPlanePiece3(40+plane_offset,100+down,90+plane_offset,100+down,fbp,vinfo,finfo);
+		            down++;
+		            nanosleep(&delay,NULL);
+		        } 
+		        //else{
+		        drawPlanePiece1(70+plane_offset,500,120+plane_offset,500,fbp,vinfo,finfo);
+		        drawPlanePiece2(50+plane_offset,500,100+plane_offset,500,fbp,vinfo,finfo);
+		        drawPlanePiece3(40+plane_offset,500,90+plane_offset,500,fbp,vinfo,finfo);
+		      	break;
+          	}  
             nanosleep(&delay,NULL);
-            if (blast == 51) {
-				break;
-			}
         } else {    // If not, continue the loop
             // ---- Clear the screen
             clear_screen(fbp,800,600,vinfo,finfo);
