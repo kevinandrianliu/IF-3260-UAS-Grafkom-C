@@ -133,7 +133,7 @@ int main()
     }
 
     // Input keyboard
-    const char *dev = "/dev/input/event4";
+    const char *dev = "/dev/input/event2";
     fd = open(dev, O_RDONLY);
     if (fd == -1) {
         fprintf(stderr, "Cannot open %s: %s.\n", dev, strerror(errno));
@@ -187,6 +187,8 @@ int main()
     delay.tv_nsec /= 5;
 
 	int blast = 1;
+    int height =100;
+    int down=1;
     // ---- Infinite loop of framebuffer drawing
     while (1) {
         // ---- Checks if the plane already shot down
@@ -195,6 +197,26 @@ int main()
             drawCannon(fbp,vinfo,finfo);
             drawBlast((60 + plane_offset), 100, blast, fbp, vinfo, finfo);
 			blast++;
+            //nanosleep(&delay,NULL);
+
+            while(height+down < 500){
+                
+                clear_screen(fbp,800,600,vinfo,finfo);
+            
+            // ---- Draw the cannon
+                drawCannon(fbp,vinfo,finfo);
+                drawPlanePiece1(70+plane_offset,100+down,120+plane_offset,100+down,fbp,vinfo,finfo);
+                drawPlanePiece2(50+plane_offset,100+down,100+plane_offset,100+down,fbp,vinfo,finfo);
+                drawPlanePiece3(40+plane_offset,100+down,90+plane_offset,100+down,fbp,vinfo,finfo);
+                down++;
+                nanosleep(&delay,NULL);
+            } 
+            /*else{
+            drawPlanePiece1(70+plane_offset,500,120+plane_offset,500,fbp,vinfo,finfo);
+            drawPlanePiece2(50+plane_offset,500,100+plane_offset,500,fbp,vinfo,finfo);
+            drawPlanePiece3(40+plane_offset,500,90+plane_offset,500,fbp,vinfo,finfo);
+            */
+            
             nanosleep(&delay,NULL);
             if (blast == 51) {
 				break;
@@ -231,6 +253,16 @@ int main()
 
             // ---- Draw the plane
             drawPlane(40+plane_offset,100,90+plane_offset,100,fbp,vinfo,finfo);
+            /*if(height+plane_offset < 500){
+                drawPlanePiece1(70,200+plane_offset,120,200+plane_offset,fbp,vinfo,finfo);
+                drawPlanePiece2(50,200+plane_offset,100,200+plane_offset,fbp,vinfo,finfo);
+                drawPlanePiece3(40,200+plane_offset,90,200+plane_offset,fbp,vinfo,finfo);
+            } else{drawPlanePiece1(70,500,120,500,fbp,vinfo,finfo);
+                drawPlanePiece2(50,500,100,500,fbp,vinfo,finfo);
+                drawPlanePiece3(40,500,90,500,fbp,vinfo,finfo);
+            }*/
+            
+             
 	    bullet_random = rand();
 	    int initialized = 0;
 	    int parabolic = 0;
