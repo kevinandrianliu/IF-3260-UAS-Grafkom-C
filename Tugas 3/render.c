@@ -27,7 +27,10 @@ pthread_t thread_list[5];       // Lists the thread available for each shots
 char thread_avail_flag[5];      // Stores the thread info, whether it's available to use or not
 char plane_shot_down = FALSE;   // Stores the plane info if it has been shot down by one of the shots
 int plane_offset = 0;           // Stores the plane offset from the initial point
-
+int bullet_random = 0;		// Check whether the bullet from plane is fired or not
+int bullet_plane_height = 126;
+int bullet_plane_width = 65;
+int increment_bullet_plane_width = 65;
 char getAvailableThread(){
 // Checks if there's an available thread to use
 // Returns 0 to 4 as the thread number, -1 if no thread is available
@@ -228,12 +231,34 @@ int main()
 
             // ---- Draw the plane
             drawPlane(40+plane_offset,100,90+plane_offset,100,fbp,vinfo,finfo);
+	    bullet_random = rand();
+	    int initialized = 0;
+	    int parabolic = 0;
+	    if(bullet_random > 20000){
+		if(!initialized){
+		    randomBullet(bullet_plane_width+parabolic,bullet_plane_height,fbp,vinfo,finfo);
+		}
+		initialized = 1;
+		if(plane_offset == 0){
+	            initialized = 0;
+                }
+	    }
             plane_offset++;
+	    bullet_plane_height++;
+	    increment_bullet_plane_width++;
+	    parabolic--;
+	    if(increment_bullet_plane_width>800){
+		increment_bullet_plane_width=0;
+	    }
+	    if(bullet_plane_height >450){
+		bullet_plane_height=126;
+		bullet_plane_width = increment_bullet_plane_width;
+	    }
 
             // ---- Reset the y position of plane
             if (plane_offset > vinfo.xres+25)
                 plane_offset = plane_offset % vinfo.xres;
-
+	
             nanosleep(&delay,NULL);
         }
     }
