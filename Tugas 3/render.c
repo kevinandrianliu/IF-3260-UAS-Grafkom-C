@@ -298,9 +298,14 @@ int main()
             nanosleep(&delay,NULL);
         }
 
-        if(bullet_collide){
-            //printf("y\n");
-            drawBlast((60 + bullet_plane_width), bullet_plane_height, blast, fbp, vinfo, finfo);
+        if(bullet_collide){ //bullets collide
+            drawBlast(bullet_plane_width, bullet_plane_height, 20, fbp, vinfo, finfo);
+            //reset plane bullet
+            bullet_plane_height=126;
+            bullet_plane_width = increment_bullet_plane_width;
+
+            nanosleep(&delay,NULL);
+            
             bullet_collide = FALSE;    
         }
     }
