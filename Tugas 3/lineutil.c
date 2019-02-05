@@ -457,14 +457,15 @@ void rasterScan(int x_min, int y_min, int x_max, int y_max, char colorful, char 
                 }
             } else {
                 if (checkPixelAround(i, j, fbp, vinfo, finfo)){
-                    fill_flag = !(fill_flag);
-                    
-                    mem_location = (i + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (j + vinfo.yoffset) * finfo.line_length;
-                    if (colorful){
-                        pixel_color(fbp,mem_location,(i % 255),(j % 255), ((j-i) % 255));
-                    } else {
-                        pixel_color(fbp,mem_location,255,255,255);
+                    if (fill_flag) {
+                        if (colorful){
+                            pixel_color(fbp,mem_location,(i % 255),(j % 255), ((j-i) % 255));
+                        } else {
+                            pixel_color(fbp,mem_location,255,255,255);
+                        }
                     }
+
+                    fill_flag = !(fill_flag);
                 }
             }
         }
