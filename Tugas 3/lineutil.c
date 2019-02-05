@@ -208,36 +208,40 @@ void drawBlast(int x0, int y0, int r, char * fbp, struct fb_var_screeninfo vinfo
 	int outerx = 35;
 	int innerl = 21;
 	int inners = 8;
+	int i;
+	for (i = 0; i <= r; i++) {
+		int ott = i;
+		int otd = outerd*i/outert;
+		int otx = outerx*i/outert;
+		int inl = innerl*i/outert;
+		int ins = inners*i/outert;
 
-	int ott = r;
-	int otd = outerd*r/outert;
-	int otx = outerx*r/outert;
-	int inl  = innerl*r/outert;
-	int ins = inners*r/outert;
+		bresenham(x0 - ins, y0 - inl, x0, y0 - ott, 0, fbp, vinfo, finfo); //Atas
+		bresenham(x0 + ins, y0 - inl, x0, y0 - ott, 0, fbp, vinfo, finfo);
 
-    bresenham(x0 - ins, y0 - inl, x0, y0 - ott, 0, fbp, vinfo, finfo); //Atas
-    bresenham(x0 + ins, y0 - inl, x0, y0 - ott, 0, fbp, vinfo, finfo);
+		bresenham(x0 - ins, y0 - inl, x0 - otx, y0 - otd, 0, fbp, vinfo, finfo); //Barat Laut
+		bresenham(x0 - inl, y0 - ins, x0 - otx, y0 - otd, 0, fbp, vinfo, finfo);
 
-    bresenham(x0 - ins, y0 - inl, x0 - otx, y0 - otd, 0, fbp, vinfo, finfo); //Barat Laut
-    bresenham(x0 - inl, y0 - ins, x0 - otx, y0 - otd, 0, fbp, vinfo, finfo);
+		bresenham(x0 - inl, y0 - ins, x0 - ott, y0, 0, fbp, vinfo, finfo); //Barat
+		bresenham(x0 - inl, y0 + ins, x0 - ott, y0, 0, fbp, vinfo, finfo);
 
-    bresenham(x0 - inl, y0 - ins, x0 - ott, y0, 0, fbp, vinfo, finfo); //Barat
-    bresenham(x0 - inl, y0 + ins, x0 - ott, y0, 0, fbp, vinfo, finfo);
+		bresenham(x0 - inl, y0 + ins, x0 - otx, y0 + otd, 0, fbp, vinfo, finfo); //Barat Daya
+		bresenham(x0 - ins, y0 + inl, x0 - otx, y0 + otd, 0, fbp, vinfo, finfo);
 
-    bresenham(x0 - inl, y0 + ins, x0 - otx, y0 + otd, 0, fbp, vinfo, finfo); //Barat Daya
-    bresenham(x0 - ins, y0 + inl, x0 - otx, y0 + otd, 0, fbp, vinfo, finfo);
+		bresenham(x0 - ins, y0 + inl, x0, y0 + ott, 0, fbp, vinfo, finfo); //Selatan
+		bresenham(x0 + ins, y0 + inl, x0, y0 + ott, 0, fbp, vinfo, finfo);
 
-    bresenham(x0 - ins, y0 + inl, x0, y0 + ott, 0, fbp, vinfo, finfo); //Selatan
-    bresenham(x0 + ins, y0 + inl, x0, y0 + ott, 0, fbp, vinfo, finfo);
+		bresenham(x0 + ins, y0 - inl, x0 + otx, y0 - otd, 0, fbp, vinfo, finfo); //Timur Laut
+		bresenham(x0 + inl, y0 - ins, x0 + otx, y0 - otd, 0, fbp, vinfo, finfo);
 
-    bresenham(x0 + ins, y0 - inl, x0 + otx, y0 - otd, 0, fbp, vinfo, finfo); //Timur Laut
-    bresenham(x0 + inl, y0 - ins, x0 + otx, y0 - otd, 0, fbp, vinfo, finfo);
+		bresenham(x0 + inl, y0 - ins, x0 + ott, y0, 0, fbp, vinfo, finfo); //Timur
+		bresenham(x0 + inl, y0 + ins, x0 + ott, y0, 0, fbp, vinfo, finfo);
 
-    bresenham(x0 + inl, y0 - ins, x0 + ott, y0, 0, fbp, vinfo, finfo); //Timur
-    bresenham(x0 + inl, y0 + ins, x0 + ott, y0, 0, fbp, vinfo, finfo);
+		bresenham(x0 + inl, y0 + ins, x0 + otx, y0 + otd, 0, fbp, vinfo, finfo); //Tenggara
+		bresenham(x0 + ins, y0 + inl, x0 + otx, y0 + otd, 0, fbp, vinfo, finfo);
 
-    bresenham(x0 + inl, y0 + ins, x0 + otx, y0 + otd, 0, fbp, vinfo, finfo); //Tenggara
-    bresenham(x0 + ins, y0 + inl, x0 + otx, y0 + otd, 0, fbp, vinfo, finfo);
+	}
+    //rasterScan(x0-ott,y0-ott,x0+ott,y0+ott,FALSE,fbp,vinfo,finfo);
 
 
 }
@@ -429,7 +433,6 @@ void rasterScan(int x_min, int y_min, int x_max, int y_max, char colorful, char 
                 if (checkPixelAround(i, j, fbp, vinfo, finfo)){
                     fill_flag = !(fill_flag);
                     
-                    mem_location = (i + vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (j + vinfo.yoffset) * finfo.line_length;
                     if (colorful){
                         pixel_color(fbp,mem_location,(i % 255),(j % 255), ((j-i) % 255));
                     } else {
