@@ -211,11 +211,11 @@ int main()
                 down++;
                 nanosleep(&delay,NULL);
             } 
-            /*else{
+            //else{
             drawPlanePiece1(70+plane_offset,500,120+plane_offset,500,fbp,vinfo,finfo);
             drawPlanePiece2(50+plane_offset,500,100+plane_offset,500,fbp,vinfo,finfo);
             drawPlanePiece3(40+plane_offset,500,90+plane_offset,500,fbp,vinfo,finfo);
-            */
+          
             
             nanosleep(&delay,NULL);
             if (blast == 51) {
