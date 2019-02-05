@@ -28,6 +28,7 @@ char thread_avail_flag[5];      // Stores the thread info, whether it's availabl
 char plane_shot_down = FALSE;   // Stores the plane info if it has been shot down by one of the shots
 int plane_offset = 0;           // Stores the plane offset from the initial point
 int bullet_random = 0;		// Check whether the bullet from plane is fired or not
+char bullet_collide = FALSE;
 int bullet_plane_height = 126;
 int bullet_plane_width = 65;
 int increment_bullet_plane_width = 65;
@@ -61,6 +62,11 @@ void *render_bullet_thread(void * thread_bullet_info){
 
         if (checkIfShot(bullet_offset, plane_offset % tbp.vinfo.xres, tbp.turret_number)){
             plane_shot_down = TRUE;
+            break;
+        }
+
+        if (checkIfCollide(bullet_offset, bullet_plane_height, bullet_plane_width, tbp.turret_number)){
+            bullet_collide = TRUE;
             break;
         }
 
@@ -133,7 +139,7 @@ int main()
     }
 
     // Input keyboard
-    const char *dev = "/dev/input/event2";
+    const char *dev = "/dev/input/event4";
     fd = open(dev, O_RDONLY);
     if (fd == -1) {
         fprintf(stderr, "Cannot open %s: %s.\n", dev, strerror(errno));
@@ -290,6 +296,12 @@ int main()
                 plane_offset = plane_offset % vinfo.xres;
 	
             nanosleep(&delay,NULL);
+        }
+
+        if(bullet_collide){
+            //printf("y\n");
+            drawBlast((60 + bullet_plane_width), bullet_plane_height, blast, fbp, vinfo, finfo);
+            bullet_collide = FALSE;    
         }
     }
 

@@ -419,6 +419,77 @@ char checkIfShot(int star_offset, int plane_offset, int selection){
     return FALSE;
 }
 
+char checkIfCollide(int star_offset, int bullet_plane_height, int bullet_plane_width, int selection){
+    int x_star;
+    int y_star;
+
+    switch (selection){
+        case 0:
+            x_star = 302-star_offset/1.5;
+            y_star = 456-star_offset;
+            break;
+        case 1:
+            x_star = 344-star_offset/2;
+            y_star = 427-star_offset;
+            break;
+        case 2:
+            x_star = 400;
+            y_star = 415-star_offset;
+            break;
+        case 3:
+            x_star = 455+star_offset/2;
+            y_star = 427-star_offset;
+            break;
+        case 4:
+            x_star = 498+star_offset/1.5;
+            y_star = 460-star_offset;
+            break;
+    }
+
+    int x_min_star_box = min(x_star-7, min(x_star, x_star+7));
+    int y_min_star_box = min(y_star-7, min(y_star, y_star+7));
+    int x_max_star_box = max(x_star-7, max(x_star, x_star+7));
+    int y_max_star_box = max(y_star-7, max(y_star, y_star+7));
+
+    int x0_plane_bullet_coordinates[4] = {
+        bullet_plane_width-7,
+        bullet_plane_width,
+        bullet_plane_width+7,
+        bullet_plane_width
+    };
+    int y0_plane_bullet_coordinates[4] = {
+        bullet_plane_height,
+        bullet_plane_height-7,
+        bullet_plane_height,
+        bullet_plane_height+7
+    };
+    int x1_plane_bullet_coordinates[4] = {
+        bullet_plane_width,
+        bullet_plane_width+7,
+        bullet_plane_width,
+        bullet_plane_width-7
+    };
+    int y1_plane_bullet_coordinates[4] = {
+        bullet_plane_height-7,
+        bullet_plane_height,
+        bullet_plane_height+7,
+        bullet_plane_height
+    };
+
+    for (int i = 0; i < 4; i++){
+        if (checkIfIntersect(x_min_star_box,y_min_star_box,x_min_star_box,y_max_star_box,x0_plane_bullet_coordinates[i],y0_plane_bullet_coordinates[i],x1_plane_bullet_coordinates[i],y1_plane_bullet_coordinates[i]))
+            return TRUE;
+        if (checkIfIntersect(x_min_star_box,y_max_star_box,x_max_star_box,y_max_star_box,x0_plane_bullet_coordinates[i],y0_plane_bullet_coordinates[i],x1_plane_bullet_coordinates[i],y1_plane_bullet_coordinates[i]))
+            return TRUE;
+        if (checkIfIntersect(x_max_star_box,y_max_star_box,x_max_star_box,y_min_star_box,x0_plane_bullet_coordinates[i],y0_plane_bullet_coordinates[i],x1_plane_bullet_coordinates[i],y1_plane_bullet_coordinates[i]))
+            return TRUE;
+        if (checkIfIntersect(x_max_star_box,y_min_star_box,x_min_star_box,y_min_star_box,x0_plane_bullet_coordinates[i],y0_plane_bullet_coordinates[i],x1_plane_bullet_coordinates[i],y1_plane_bullet_coordinates[i]))
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
 char checkPixelAround(int x, int y, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
     long int mem_location;
     int max_x;
