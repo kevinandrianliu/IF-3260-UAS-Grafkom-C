@@ -229,6 +229,8 @@ void drawPlanePiece3(int x0, int y0, int x1, int y1, char * fbp, struct fb_var_s
     bresenham(x0   ,y0   ,x0-10,y0+25,0,fbp,vinfo,finfo);//ekor
     bresenham(x0   ,y0   ,x1-80,y1-15,0,fbp,vinfo,finfo);//ekor
     bresenham(x0-10,y0+25,x1-80,y1-15,0,fbp,vinfo,finfo);//ekor
+    //rasterScan(x0-30,y0-15,x0,y1+25,TRUE,fbp,vinfo,finfo);
+
 }
 
 void drawBlast(int x0, int y0, int r, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
