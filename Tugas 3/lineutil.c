@@ -199,6 +199,36 @@ void drawPlane(int x0, int y0, int x1, int y1, char * fbp, struct fb_var_screeni
     bresenham(x0+40,y0+15,x1-50,y1+41,0,fbp,vinfo,finfo);//sayap
     bresenham(x0   ,y0   ,x1-80,y1-15,0,fbp,vinfo,finfo);//ekor
     bresenham(x0-10,y0+25,x1-80,y1-15,0,fbp,vinfo,finfo);//ekor
+    //rasterScan(x0-30,y0-15,x1+25,y1+41,TRUE,fbp,vinfo,finfo);
+    //rasterScan(x0-15,y1-10,x1-10,y1+13,TRUE,fbp,vinfo,finfo);
+}
+
+void drawPlanePiece1(int x0, int y0, int x1, int y1, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    
+    bresenham(x0+35,y0,x1,y1,0,fbp,vinfo,finfo);//lurus atas
+    bresenham(x0+50,y0+26,x1   ,y1+26,0,fbp,vinfo,finfo);//lurus bawah
+    bresenham(x0+52,y0+11,x1+23,y1+11,0,fbp,vinfo,finfo);//lurus tengah
+    bresenham(x0+52,y0+11,x1-15,y1   ,0,fbp,vinfo,finfo);//runcing
+    bresenham(x0+50,y0+26,x1+25,y1+13,0,fbp,vinfo,finfo);//runcing
+    bresenham(x0+50,y0   ,x1+25,y1+13,0,fbp,vinfo,finfo);//runcing
+    bresenham(x0+50,y0+30,x0+35,y0,0,fbp,vinfo,finfo);//runcing
+    
+}
+
+void drawPlanePiece2(int x0, int y0, int x1, int y1, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    bresenham(x0,y0,x1,y1,0,fbp,vinfo,finfo);//lurus atas
+    bresenham(x0-9 ,y0+26,x1-47,y1+26,0,fbp,vinfo,finfo);//lurus bawah
+    bresenham(x0+25,y0+26,x1   ,y1+26,0,fbp,vinfo,finfo);//lurus bawah
+    bresenham(x0,y0,x0-9,y0+26,0,fbp,vinfo,finfo);//
+    bresenham(x1,y1,x1,y1+26,0,fbp,vinfo,finfo);//
+    bresenham(x0+10,y0+15,x1-10,y1+15,0,fbp,vinfo,finfo);//tambahan bawah
+    bresenham(x0+9,y0+15,x1-50,y1+41,0,fbp,vinfo,finfo);//sayap
+    bresenham(x0+40,y0+15,x1-50,y1+41,0,fbp,vinfo,finfo);//sayap
+}
+void drawPlanePiece3(int x0, int y0, int x1, int y1, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    bresenham(x0   ,y0   ,x0-10,y0+25,0,fbp,vinfo,finfo);//ekor
+    bresenham(x0   ,y0   ,x1-80,y1-15,0,fbp,vinfo,finfo);//ekor
+    bresenham(x0-10,y0+25,x1-80,y1-15,0,fbp,vinfo,finfo);//ekor
 }
 
 void drawBlast(int x0, int y0, int r, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
