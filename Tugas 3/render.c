@@ -133,7 +133,7 @@ int main()
     }
 
     // Input keyboard
-    const char *dev = "/dev/input/event4";
+    const char *dev = "/dev/input/event2";
     fd = open(dev, O_RDONLY);
     if (fd == -1) {
         fprintf(stderr, "Cannot open %s: %s.\n", dev, strerror(errno));
