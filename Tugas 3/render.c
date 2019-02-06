@@ -294,8 +294,9 @@ int main()
 
     // -------- Printing Credits --------
     int vertical_offset = 600;
-    for (;;){
+    delay.tv_nsec = 50000000;
 
+    for (;;){
         clear_screen(fbp,800,600,vinfo,finfo);
         if ((vertical_offset>=0) && (vertical_offset<600))
             nama(vertical_offset,fbp, vinfo, finfo);

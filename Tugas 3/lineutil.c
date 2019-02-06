@@ -278,6 +278,10 @@ void drawBlast(int x0, int y0, int r, char * fbp, struct fb_var_screeninfo vinfo
 
 }
 void drawCannon(char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
+    halfcircleBres(400,530,80,fbp,vinfo,finfo);
+    bresenham(320,530,480,530,0,fbp,vinfo,finfo);
+    rasterScan(320,450,480,530,1,fbp,vinfo,finfo);
+
     //bresenham(340-c,440-c,360-c,460-c,TRUE,fbp,vinfo,finfo);
     bresenham(307,450,335,495,0,fbp,vinfo,finfo);
     bresenham(298,462,307,450,0,fbp,vinfo,finfo);
@@ -299,11 +303,6 @@ void drawCannon(char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screen
     bresenham(493,450,465,479,0,fbp,vinfo,finfo);
     bresenham(503,469,493,450,0,fbp,vinfo,finfo);
     bresenham(502,462,473,493,0,fbp,vinfo,finfo);
-
-
-    halfcircleBres(400,530,80,fbp,vinfo,finfo);
-    bresenham(320,530,480,530,0,fbp,vinfo,finfo);
-
 }
 
 void drawStar(int x0, int y0, char * fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo){
