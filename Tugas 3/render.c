@@ -29,6 +29,7 @@ char plane_shot_down = FALSE;   // Stores the plane info if it has been shot dow
 int plane_offset = 0;           // Stores the plane offset from the initial point
 int bullet_random = 0;		// Check whether the bullet from plane is fired or not
 char bullet_collide = FALSE;
+int attacked = 0;
 int bullet_plane_height = 126;
 int bullet_plane_width = 65;
 int increment_bullet_plane_width = 65;
@@ -76,6 +77,8 @@ void *render_bullet_thread(void * thread_bullet_info){
         } else {
             break;
         }
+
+        
 
         nanosleep(&delay,NULL);
     }
@@ -153,35 +156,7 @@ int main()
     delay.tv_sec = 0;
     delay.tv_nsec = 50000000;
 
-    // -------- Printing Credits --------
-    int vertical_offset = 600;
-    for (;;){
-        break;
-
-        clear_screen(fbp,800,600,vinfo,finfo);
-        if ((vertical_offset>=0) && (vertical_offset<600))
-            nama(vertical_offset,fbp, vinfo, finfo);
-        if ((vertical_offset+50>=0) && (vertical_offset+50<600))
-            bella(vertical_offset+50, fbp, vinfo, finfo);
-        if ((vertical_offset+100>=0) && (vertical_offset+100<600))
-            yora(vertical_offset+100,fbp,vinfo, finfo);
-        if ((vertical_offset+150>=0) && (vertical_offset+150<600))
-            kevin_a(vertical_offset+150, fbp, vinfo, finfo);
-        if ((vertical_offset+200>=0) && (vertical_offset+200<600))
-            kevin_f(vertical_offset+200, fbp, vinfo, finfo);
-        if ((vertical_offset+250>=0) && (vertical_offset+250<600))
-            tere(vertical_offset+250, fbp, vinfo, finfo);
-        if ((vertical_offset+300>=0) && (vertical_offset+300<600))
-            fildah(vertical_offset+300, fbp, vinfo, finfo);
-        if ((vertical_offset+350>=0) && (vertical_offset+350<600))
-            richard(vertical_offset+350, fbp, vinfo, finfo);
-
-        vertical_offset -= 3;
-        nanosleep(&delay,NULL);
-
-        if (vertical_offset < -400)
-            break;
-    }
+    
 
     // -------- Printing Game Sequence --------
     // ---- Initialize thread flags
@@ -198,7 +173,7 @@ int main()
     // ---- Infinite loop of framebuffer drawing
     while (1) {
         // ---- Checks if the plane already shot down
-        if (plane_shot_down){   // If yes, break out of the loop
+        if (plane_shot_down ){   // If yes, break out of the loop
             clear_screen(fbp,800,600,vinfo,finfo);
             drawCannon(fbp,vinfo,finfo);
             drawBlast((60 + plane_offset), 100, blast, fbp, vinfo, finfo);
@@ -265,7 +240,11 @@ int main()
                 drawPlanePiece2(50,500,100,500,fbp,vinfo,finfo);
                 drawPlanePiece3(40,500,90,500,fbp,vinfo,finfo);
             }*/
-            
+        if (attacked>=1) {
+            clear_screen(fbp,800,600,vinfo,finfo);
+            printf("You LOSE\n");
+            break;
+        }    
              
 	    bullet_random = rand();
 	    int initialized = 0;
@@ -286,9 +265,11 @@ int main()
 	    if(increment_bullet_plane_width>800){
 		increment_bullet_plane_width=0;
 	    }
-	    if(bullet_plane_height >450){
+	    if(bullet_plane_height >500){
 		bullet_plane_height=126;
 		bullet_plane_width = increment_bullet_plane_width;
+         attacked++;
+
 	    }
 
             // ---- Reset the y position of plane
@@ -308,6 +289,36 @@ int main()
             
             bullet_collide = FALSE;    
         }
+    }
+
+
+    // -------- Printing Credits --------
+    int vertical_offset = 600;
+    for (;;){
+
+        clear_screen(fbp,800,600,vinfo,finfo);
+        if ((vertical_offset>=0) && (vertical_offset<600))
+            nama(vertical_offset,fbp, vinfo, finfo);
+        if ((vertical_offset+50>=0) && (vertical_offset+50<600))
+            bella(vertical_offset+50, fbp, vinfo, finfo);
+        if ((vertical_offset+100>=0) && (vertical_offset+100<600))
+            yora(vertical_offset+100,fbp,vinfo, finfo);
+        if ((vertical_offset+150>=0) && (vertical_offset+150<600))
+            kevin_a(vertical_offset+150, fbp, vinfo, finfo);
+        if ((vertical_offset+200>=0) && (vertical_offset+200<600))
+            kevin_f(vertical_offset+200, fbp, vinfo, finfo);
+        if ((vertical_offset+250>=0) && (vertical_offset+250<600))
+            tere(vertical_offset+250, fbp, vinfo, finfo);
+        if ((vertical_offset+300>=0) && (vertical_offset+300<600))
+            fildah(vertical_offset+300, fbp, vinfo, finfo);
+        if ((vertical_offset+350>=0) && (vertical_offset+350<600))
+            richard(vertical_offset+350, fbp, vinfo, finfo);
+
+        vertical_offset -= 3;
+        nanosleep(&delay,NULL);
+
+        if (vertical_offset < -400)
+            break;
     }
 
     munmap(fbp, screensize);
